@@ -1,0 +1,13 @@
+rvm_install_on_use_flag=1
+rvm_gemset_create_on_use_flag=1
+rvm use 1.9.3@twitter_clone
+
+
+# Bash aliases
+alias gits='git status -s'
+alias gita='git add'
+alias gitc='git commit'
+alias gitca='git commit -a'
+alias pull='git pull'
+alias push='git push'
+alias run='ruby main.rb'
