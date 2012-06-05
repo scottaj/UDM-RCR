@@ -5,7 +5,20 @@ require 'mongoid'
 
 class RCRApp < Sinatra::Base
   configure do
+    set :environment, :development
     Mongoid.load!("./mongoid.yml")
+  end
+
+  get '/' do
+    
+  end
+
+  get '/submit' do
+    
+  end
+  
+  post '/submit'
+  
   end
 end
 
