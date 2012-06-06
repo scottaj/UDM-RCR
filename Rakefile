@@ -3,6 +3,9 @@ require 'rake/clean'
 require 'rdoc/task'
 require 'rake/testtask'
 
+task default do
+end
+
 RDoc::Task.new do |rdoc|
   files =['README.md', 'lib/**/*.rb', 'lib/**/*.rbw', 'main.rb']
   rdoc.external = true
