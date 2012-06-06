@@ -3,7 +3,7 @@ require 'rake/clean'
 require 'rdoc/task'
 require 'rake/testtask'
 
-task default do
+task :default do
 end
 
 RDoc::Task.new do |rdoc|
