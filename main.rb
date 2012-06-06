@@ -17,7 +17,11 @@ class RCRApp < Sinatra::Base
     
   end
   
-  post '/submit'
+  post '/submit' do
+  
+  end
+
+  get '/admin' do
   
   end
 end
