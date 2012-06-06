@@ -6,7 +6,12 @@ require 'mongoid'
 class RCRApp < Sinatra::Base
   configure do
     set :environment, :development
-    Mongoid.load!("./mongoid.yml")
+    # Mongoid.load!("./mongoid.yml")
+    Mongoid.configure do |config|
+      name = "rcr_app"
+      host = "localhost"
+      config.master = Mongo::Connection.new.db(name)
+    end
   end
 
   get '/' do
