@@ -1,19 +1,18 @@
-div class="row-fluid"
-  div class="span9 well"
-    h1 Room Condition Report Submission
-    p 
-     | Text here to introduce the RCR and giving general info,
-       warnings, etc...
-  div class="span3 well"  
-    form class="form-horizontal span12" action="/" method="post"    
-      h3 Sign in using your access token:
-      div class="row-fluid"
-        input type="text" name="token" class="span8" placeholder="Token"
-      div class="row-fluid"
-        - if message
-            div class="alert alert-error span8" = message
-        - else
-            br
-      div class="row-fluid"
-          button type="submit" class="btn btn-primary span3" Go!
-    a href="/help/token" Having trouble with your token?
+div class="span9 well"
+  h1 Room Condition Report Submission
+  p 
+   | Text here to introduce the RCR and giving general info,
+     warnings, etc...
+div class="span3 well"  
+  form class="form-horizontal span12" action="/" method="post"    
+    h3 Sign in using your access token:
+    div class="row-fluid"
+      input type="text" name="token" class="span8" placeholder="Token"
+    div class="row-fluid"
+      - if message
+          div class="alert alert-error span8" = message
+      - else
+          br
+    div class="row-fluid"
+        button type="submit" class="btn btn-primary span3" Go!
+  a href="/help/token" Having trouble with your token?
