@@ -1,4 +1,5 @@
 require 'yaml'
+require 'fileutils'
 
 ##
 # Uses a YAML configuration file to determine

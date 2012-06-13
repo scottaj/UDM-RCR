@@ -10,8 +10,7 @@ require_relative 'lib/room_info'
 class RCRApp < Sinatra::Base
   configure do
     enable :sessions
-    #set :environment, :development
-    # Mongoid.load!("./mongoid.yml")
+
     Mongoid.configure do |config|
       name = "rcr_app"
       host = "localhost"
@@ -36,12 +35,12 @@ class RCRApp < Sinatra::Base
   end
 
   get '/' do
+    # Load active term data
+    File.open('active.yml', 'r') {|f| session[:active_term] = YAML::load(f)}
     slim :index, locals: {page_title: "Sign In", message: nil}
   end
 
   post '/' do
-    session[:active_term] = nil
-    File.open('active.yml', 'r') {|f| active_term = YAML::load(f)}
     if RCR.token_exists_for_term?(params[:token], session[:active_term][:year], session[:active_term][:term])
       session[:token] = params[:token]
       redirect '/submit'
