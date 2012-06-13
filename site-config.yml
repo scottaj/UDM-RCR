@@ -1,0 +1,29 @@
+---
+:areas:
+- :name: McNichols
+  :parent: 
+  :categories:
+  - :name: Furniture
+    :items: []
+  - :name: Structural
+    :items:
+    - :name: Ceiling
+      :description: Check for missing tiles, water damage, chips, etc.
+    - :name: Floor
+      :description: Check for cracked tiles, scuff marks, stains, etc.
+    - :name: Walls
+      :description: Check for holes, stickers, writing, etc.
+- :name: Quads
+  :parent: McNichols
+  :categories:
+  - :name: Bathroom
+    :items:
+    - :name: Shower
+      :description: Make sure shower works and has no missing tiles, etc.
+- :name: Traditional
+  :parent: McNichols
+  :categories: []
+:rooms:
+- :building: East Quad
+  :rooms: 201-216
+  :area: Quads
