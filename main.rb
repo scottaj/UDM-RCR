@@ -12,9 +12,15 @@ class RCRApp < Sinatra::Base
     enable :sessions
 
     Mongoid.configure do |config|
-      name = "rcr_app"
-      host = "localhost"
-      config.master = Mongo::Connection.new.db(name)
+      if ENV['RACK_ENV'] == 'test'
+        name = "rcr_app_testing"
+        host = 'localhost'
+        config.master = Mongo::Connection.new.db(name)
+      else
+        name = "rcr_app"
+        host = "localhost"
+        config.master = Mongo::Connection.new.db(name)
+      end
     end
 
     Slim::Engine.set_default_options :pretty => true
@@ -30,10 +36,6 @@ class RCRApp < Sinatra::Base
     
   end
 
-  before '/submit' do
-    
-  end
-
   get '/' do
     # Load active term data
     File.open('active.yml', 'r') {|f| session[:active_term] = YAML::load(f)}
@@ -43,22 +45,24 @@ class RCRApp < Sinatra::Base
   post '/' do
     if RCR.token_exists_for_term?(params[:token], session[:active_term][:year], session[:active_term][:term])
       session[:token] = params[:token]
-      redirect '/submit'
+      redirect '/confirm'
     else
       slim :index, locals: {page_title: "Sign In", message: "Token not found!"}
     end
   end
 
-  get '/submit' do
-    
+  get '/confirm' do
+    @rcr = RCR.get_rcr_for_term_by_token(session[:token], session[:active_term][:year], session[:active_term][:term])
+    name = "#{@rcr.first_name} #{@rcr.last_name}"
+    room = "#{@rcr.building} #{@rcr.room_number}"
+    term = "#{session[:active_term][:term]} #{session[:active_term][:year]}"
+    slim :confirm, locals: {page_title: "Confirmation", name: name, room: room, term: term}
   end
   
-  post '/submit' do
-  
-  end
-
-  get '/admin' do
-  
+  get '/RCR' do
+    name = "#{@rcr.first_name} #{@rcr.last_name}"
+    room = "#{@rcr.building} #{@rcr.room_number}"
+    slim :rcr, locals: {page_title: "RCR Submission", name: name, room: room}
   end
 end
 

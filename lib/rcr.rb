@@ -27,4 +27,8 @@ class RCR
     return true if RCR.where(token: token, term_year: term_year, term_name: term_name).first
     return false
   end
+
+  def RCR.get_rcr_for_term_by_token(token, term_year, term_name)
+    return RCR.where(token: token, term_year: term_year, term_name: term_name).first
+  end
 end

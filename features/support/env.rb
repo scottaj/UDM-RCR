@@ -6,16 +6,28 @@ require File.join(File.dirname(__FILE__), '..', '..', 'main.rb')
 
 require 'capybara'
 require 'capybara/cucumber'
-require 'rspec'
+require 'test/unit/assertions'
+require 'database_cleaner'
+require 'database_cleaner/cucumber'
 
 Capybara.app = RCRApp
+Capybara.javascript_driver = :webkit
+DatabaseCleaner.strategy = :truncation
 
 class RCRAppWorld
   include Capybara::DSL
-  include RSpec::Expectations
-  include RSpec::Matchers
+  include Test::Unit::Assertions
 end
 
 World do
   RCRAppWorld.new
+end
+
+Before do
+  File.open('active.yml', 'r') {|f| @term = YAML::load(f)}
+  DatabaseCleaner.start
+end
+
+After do
+  DatabaseCleaner.clean
 end
