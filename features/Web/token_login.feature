@@ -20,3 +20,7 @@ Feature: Token Login
 		   Then I should be on the home page
 		   And I should see "Token not found!" within "#token-login"
 		   
+	 Scenario: Clicking on the help link on the token page
+	 	   Given I am on the home page
+		   When I follow "Having trouble with your token?"
+		   Then I should be on the token help page

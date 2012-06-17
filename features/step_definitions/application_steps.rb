@@ -13,3 +13,10 @@ end
 Then /^there is no RCR with the token "(.*?)"$/ do |token|
   assert_equal(false, RCR.token_exists_for_term?(token, @term[:year], @term[:term]))
 end
+
+When /^I log in with the token "(.*?)"$/ do |token|
+  visit '/'
+  fill_in("token", with: token)
+  click_button("Go!")
+end
+

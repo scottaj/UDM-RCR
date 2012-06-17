@@ -5,3 +5,9 @@ div class="span8 well" id="center"
     div class="span4"
     h4 class="span4" = room
 div class="span2" id="left"
+  div class="well" id="categories"
+    h3 Categories:
+    ul
+      - categories.each do |category|
+        li 
+          a href="/RCR?category=#{category}" = category

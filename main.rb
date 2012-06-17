@@ -24,6 +24,8 @@ class RCRApp < Sinatra::Base
     end
 
     Slim::Engine.set_default_options :pretty => true
+
+    @@room_info = RoomInfo.new("site-config.yml")
   end
 
   helpers do
@@ -52,17 +54,19 @@ class RCRApp < Sinatra::Base
   end
 
   get '/confirm' do
-    @rcr = RCR.get_rcr_for_term_by_token(session[:token], session[:active_term][:year], session[:active_term][:term])
-    name = "#{@rcr.first_name} #{@rcr.last_name}"
-    room = "#{@rcr.building} #{@rcr.room_number}"
+    rcr = RCR.get_rcr_for_term_by_token(session[:token], session[:active_term][:year], session[:active_term][:term])
+    name = "#{rcr.first_name} #{rcr.last_name}"
+    room = "#{rcr.building} #{rcr.room_number}"
     term = "#{session[:active_term][:term]} #{session[:active_term][:year]}"
     slim :confirm, locals: {page_title: "Confirmation", name: name, room: room, term: term}
   end
   
   get '/RCR' do
-    name = "#{@rcr.first_name} #{@rcr.last_name}"
-    room = "#{@rcr.building} #{@rcr.room_number}"
-    slim :rcr, locals: {page_title: "RCR Submission", name: name, room: room}
+    rcr = RCR.get_rcr_for_term_by_token(session[:token], session[:active_term][:year], session[:active_term][:term])
+    name = "#{rcr.first_name} #{rcr.last_name}"
+    room = "#{rcr.building} #{rcr.room_number}"
+    categories = @@room_info.get_categories_for_area(@@room_info.get_area_for_room(rcr.building, rcr.room_number))
+    slim :rcr, locals: {page_title: "RCR Submission", name: name, room: room, categories: categories}
   end
 end
 

@@ -16,6 +16,10 @@ module NavigationHelpers
       '/confirm'
     when /the RCR page/
       '/RCR'
+    when /the confirmation help page/
+      '/help/identity'
+    when /the token help page/
+      '/help/token'
     else
       raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
         "Now, go and add a mapping in #{__FILE__}"
