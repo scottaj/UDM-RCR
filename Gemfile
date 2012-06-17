@@ -6,9 +6,12 @@ gem "slim"
 gem "rake"
 gem "rdoc"
 gem "thin"
-gem "capybara"
-gem "capybara-webkit"
-gem "cucumber"
-gem "cucumber-sinatra"
 gem "heroku"
-gem "database_cleaner"
+group :test do
+  gem "capybara"
+  gem "capybara-webkit"
+  gem "cucumber"
+  gem "cucumber-sinatra"
+  gem "database_cleaner"
+end
+
