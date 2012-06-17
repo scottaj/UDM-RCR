@@ -3,6 +3,7 @@ require 'sinatra'
 require 'slim'
 require 'mongoid'
 require 'yaml'
+require 'uri'
 
 require_relative 'lib/rcr'
 require_relative 'lib/room_info'
@@ -12,7 +13,12 @@ class RCRApp < Sinatra::Base
     enable :sessions
 
     Mongoid.configure do |config|
-      if ENV['RACK_ENV'] == 'test'
+      if ENV['MONGOLAB_URI']
+        uri = URI.parse(ENV['MONGOLAB_URI'])
+        conn = Mongo::Connection.from_uri(ENV['MONGOLAB_URI'])
+        db = conn.db(uri.path.gsub(/^\//, ''))
+        config.master = db
+      elsif ENV['RACK_ENV'] == 'test'
         name = "rcr_app_testing"
         host = 'localhost'
         config.master = Mongo::Connection.new.db(name)
