@@ -9,3 +9,19 @@ Feature: Users should be able to submit an RCR
 		    And I should see "Structural" within "#categories"
 		    And I should see "Furniture" within "#categories"
 		    And I should see "Bathroom" within "#categories"
+
+	  Scenario: I should see the name of the category in the URL on the page.
+
+	  Scenario: I should see each item in the current category on the page
+
+	  Scenario: I should be able to rate each item on the page
+
+	  Scenario: I should be able to go to the next page if there is one
+
+	  Scenario: I should be able to go to the previous page if there is one
+
+	  Scenario: I Should be able to submit my RCR on the last page
+
+	  Scenario: I should be able to jump to any category by clicking its link in the categories box
+
+	  Scenario: I should be able to leave a page and return  to it having the same state
