@@ -24,6 +24,7 @@ World do
 end
 
 Before do
+  @room_info = RoomInfo.new("site-config.yml")
   File.open('active.yml', 'r') {|f| @term = YAML::load(f)}
   DatabaseCleaner.start
 end

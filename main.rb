@@ -38,6 +38,18 @@ class RCRApp < Sinatra::Base
     def generate_token(n)
       return rand(36**n).to_s(36)
     end
+
+    def get_items_for_category_in_rcr(category, rcr)
+      items = @@room_info.get_items_for_room(rcr.building, rcr.room_number).keep_if {|item| item[:category] == category}
+      rated_items = rcr.room_items.where(category: category)
+      rated_items.each do |item|
+        if items.index {|i| item.name == i[:name]}
+          i[:rating] = item.rating
+          i[:comments] = item.comments
+        end
+      end
+      return items
+    end
   end
 
   before /\/admin.*/ do
@@ -72,7 +84,13 @@ class RCRApp < Sinatra::Base
     name = "#{rcr.first_name} #{rcr.last_name}"
     room = "#{rcr.building} #{rcr.room_number}"
     categories = @@room_info.get_categories_for_area(@@room_info.get_area_for_room(rcr.building, rcr.room_number))
-    slim :rcr, locals: {page_title: "RCR Submission", name: name, room: room, categories: categories}
+
+    if params[:category]
+      items = get_items_for_category_in_rcr(params[:category], rcr)
+      slim :rcr, locals: {page_title: "RCR Submission", name: name, room: room, categories: categories, current_category: params[:category], items: items}
+    else
+      redirect "/RCR?category=#{categories[0]}"
+    end
   end
 end
 

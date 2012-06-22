@@ -1,9 +1,14 @@
 div class="span2" id="right"
-div class="span8 well" id="center"
+div class="span8" id="center"
   div class="row-fluid"
-    h4 class="span4" = name
-    div class="span4"
-    h4 class="span4" = room
+    h3 class="span4" = name
+    h3 class="span4" = room
+    h3 class="span4" = current_category
+  - items.each do |item|
+    div class="row-fluid"
+      div class="span10 well"
+        h4 = item[:name]
+        p = item[:description]
 div class="span2" id="left"
   div class="well" id="categories"
     h3 Categories:

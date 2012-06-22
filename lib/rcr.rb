@@ -4,9 +4,9 @@ require 'mongoid'
 class RoomItem
   include Mongoid::Document
   field :category, type: String
-  field :item, type: String
-  field :condition, type: Integer
-  field :condition_notes, type: String
+  field :name, type: String
+  field :rating, type: Integer
+  field :comments, type: String
   embedded_in :rcr
 end
 
