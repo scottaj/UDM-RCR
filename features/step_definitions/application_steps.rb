@@ -11,11 +11,26 @@ module AppCukeHelpers
     end
     return param_value
   end
+
+  def get_items_on_page(category_name)
+    return @room_info.get_items_for_room("East Quad", 210).keep_if do |item|
+      item[:category] == category_name
+    end
+  end
+  
+  def find_which_button(labels, selector)
+    labels = labels.split(/,\s*/)
+    found = nil
+    with_scope(selector) do
+      labels.each {|label| found = label if page.has_button?(label)}
+    end
+    return found
+  end
 end
 World(AppCukeHelpers)
 
 Given /^an RCR with token "(.*?)" exists for "(.*?)\s(.*?)" in room "(.*?)" of the building "(.*?)"$/ do |token, first_name, last_name, room, building|
-  RCR.create(token: "abc123",
+  @rcr = RCR.create(token: "abc123",
              term_year: @term[:year],
              term_name: @term[:term],
              first_name: first_name,
@@ -45,9 +60,7 @@ end
 
 Then /^I should see the each item in the "(.*?)" parameter on the page(?: within "([^\"]*)")?$/ do |param, selector|
   param_value = get_param_value(param, current_url)
-  items = @room_info.get_items_for_room("East Quad", 210).keep_if do |item|
-    item[:category] == param_value
-  end
+  items = get_items_on_page(param_value)
   with_scope(selector) do
     items.each do |item|
       assert(page.has_content?(item[:name]))
@@ -68,3 +81,22 @@ Then /^I should not see items that are not in the "(.*?)" parameter within "(.*?
 end
 
 
+Then /^I should be able to rate each item$/ do
+  assert(page.find('.item').has_selector?('select'))
+end
+
+Then /^I should be able to add a comment for each rating$/ do
+  assert(page.find('.item').has_selector?('textarea'))
+end
+
+Then /^clicking (".+") within "(.*?)" should save my ratings to the database$/ do |labels, selector|
+  found = find_which_button(labels, selector)
+  if found
+    page.click_button(found)
+    rcr = RCR.where(token: @rcr.token)
+    items_on_page = get_items_on_page(get_param_value("category"))
+    items_on_page.each {|item| assert(rcr.room_items.where(name: item), "Item: #{item} not saved.")}
+  else
+    raise "Button not found!"
+  end  
+end

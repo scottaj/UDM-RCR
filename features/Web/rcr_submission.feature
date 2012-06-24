@@ -31,6 +31,9 @@ Feature: Users should be able to submit an RCR
 		    And an RCR with token "abc123" exists for "Jane Doe" in room "210" of the building "East Quad"
 		    When I log in with the token "abc123"
 		    And I follow "Yes" within "#confirm"
+		    Then I should be able to rate each item
+		    And I should be able to add a comment for each rating
+		    And clicking "Next", "Previous", or "Submit" within "#continue" should save my ratings to the database
 
 	  Scenario: I should be able to jump to any category by clicking its link in the categories box
 

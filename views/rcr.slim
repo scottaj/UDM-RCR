@@ -5,10 +5,22 @@ div class="span8" id="center"
     h3 class="span4" = room
     h3 class="span4" = current_category
   - items.each do |item|
-    div class="row-fluid"
+    div class="row-fluid item"
       div class="span10 well"
         h4 = item[:name]
         p = item[:description]
+        div class="row-fluid rating"
+          form type="submit" class="form-inline"
+            label for="rating" == "<strong>Rating:&nbsp&nbsp</strong>"
+            select name="rating" id="rating"
+              option 
+              option 1 - Bad
+              option 2 - Poor
+              option 3 - fair
+              option 4 - Good
+              option 5 - New
+            label for="comment" &nbsp&nbsp
+            textarea name="comment" id="comment" class="input-xlarge" rows="2" placeholder="Add comments to your rating here"
 div class="span2" id="left"
   div class="well" id="categories"
     h3 Categories:
