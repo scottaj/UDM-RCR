@@ -16,11 +16,21 @@ div class="span8" id="center"
               option 
               option 1 - Bad
               option 2 - Poor
-              option 3 - fair
+              option 3 - Fair
               option 4 - Good
               option 5 - New
             label for="comment" &nbsp&nbsp
             textarea name="comment" id="comment" class="input-xlarge" rows="2" placeholder="Add comments to your rating here"
+  div class="row-fluid" id="continue"
+    span class="span6"
+    - if page_type == "middle"
+      button class="span2 btn-large btn-info" id="previous" Previous
+    - else
+      span class="span2"
+    - unless page_type == "last"
+      button class="span2 btn-large btn-info" id="next" Next
+    - else
+      button class="span2 btn-large btn-info" id="submit" Submit
 div class="span2" id="left"
   div class="well" id="categories"
     h3 Categories:

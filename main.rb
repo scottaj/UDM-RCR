@@ -86,8 +86,15 @@ class RCRApp < Sinatra::Base
     categories = @@room_info.get_categories_for_area(@@room_info.get_area_for_room(rcr.building, rcr.room_number))
 
     if params[:category]
+      if params[:category] == categories[0]
+        page_type = "first"
+      elsif params[:category] == categories[-1]
+        page_type = "last"
+      else
+        page_type = "middle"
+      end
       items = get_items_for_category_in_rcr(params[:category], rcr)
-      slim :rcr, locals: {page_title: "RCR Submission", name: name, room: room, categories: categories, current_category: params[:category], items: items}
+      slim :rcr, locals: {page_title: "RCR Submission", name: name, room: room, categories: categories, current_category: params[:category], items: items, page_type: page_type}
     else
       redirect "/RCR?category=#{categories[0]}"
     end

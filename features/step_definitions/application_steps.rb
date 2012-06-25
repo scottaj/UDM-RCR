@@ -22,7 +22,10 @@ module AppCukeHelpers
     labels = labels.split(/,\s*/)
     found = nil
     with_scope(selector) do
-      labels.each {|label| found = label if page.has_button?(label)}
+      labels.each do |label|
+        label = label[/\w+/]
+        found = label if page.has_button?(label)
+      end
     end
     return found
   end
