@@ -26,6 +26,7 @@ Feature: Users should be able to submit an RCR
 		    Then I should see the each item in the "category" parameter on the page within "#center"
 		    And I should not see items that are not in the "category" parameter within "#center"
 
+          @javascript
 	  Scenario: I should be able to rate each item on the page
 	  	    Given I am on the home page
 		    And an RCR with token "abc123" exists for "Jane Doe" in room "210" of the building "East Quad"
@@ -33,7 +34,9 @@ Feature: Users should be able to submit an RCR
 		    And I follow "Yes" within "#confirm"
 		    Then I should be able to rate each item
 		    And I should be able to add a comment for each rating
-		    And clicking "Next", "Previous", "Submit" within "#continue" should save my ratings to the database
+                    When I rate each item "5" within "#center"
+                    And I comment each item "Comment Here" within "#center"
+		    Then clicking "Next", "Previous", "Submit" within "#continue" should save my ratings to the database
 
 	  Scenario: I should be able to jump to any category by clicking its link in the categories box
 

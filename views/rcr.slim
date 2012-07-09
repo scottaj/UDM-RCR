@@ -1,3 +1,17 @@
+coffee:
+  $ ->
+    ratings = []
+    $("#center").find("div.item").each(() ->
+      ratings.push([$(this).find("h4").text(), $(this).find("option:selected").val(), $(this).find("textarea").val]))
+    $("#previous").click( () ->
+      $.post("/previouscategory", {ratings: ratings}, (data) ->
+      ))
+    $("#next").click( () ->
+      $.post("/nextcategory", {ratings: ratings}, (data) ->
+      ))
+    $("#submit").click( () ->
+      $.post("/submit", {ratings: ratings}, (data) ->
+      ))
 div class="span2" id="right"
 div class="span8" id="center"
   div class="row-fluid"
@@ -5,14 +19,14 @@ div class="span8" id="center"
     h3 class="span4" = room
     h3 class="span4" = current_category
   - items.each do |item|
-    div class="row-fluid item"
-      div class="span10 well"
+    div class="row-fluid"
+      div class="span10 well item"
         h4 = item[:name]
         p = item[:description]
         div class="row-fluid rating"
           form type="submit" class="form-inline"
             label for="rating" == "<strong>Rating:&nbsp&nbsp</strong>"
-            select name="rating" id="rating"
+            select name="rating" id="#{item[:name]}-rating"
               option 
               option 1 - Bad
               option 2 - Poor
@@ -20,7 +34,7 @@ div class="span8" id="center"
               option 4 - Good
               option 5 - New
             label for="comment" &nbsp&nbsp
-            textarea name="comment" id="comment" class="input-xlarge" rows="2" placeholder="Add comments to your rating here"
+            textarea name="comment" id="#{item[:name]}-comment" class="input-xlarge" rows="2" placeholder="Add comments to your rating here"
   div class="row-fluid" id="continue"
     span class="span6"
     - if page_type == "middle"

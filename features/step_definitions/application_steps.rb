@@ -44,14 +44,34 @@ Given /^an RCR with token "(.*?)" exists for "(.*?)\s(.*?)" in room "(.*?)" of t
              complete: false)
 end
 
-Then /^there is no RCR with the token "(.*?)"$/ do |token|
-  assert_equal(false, RCR.token_exists_for_term?(token, @term[:year], @term[:term]))
-end
-
 When /^I log in with the token "(.*?)"$/ do |token|
   visit '/'
   fill_in("token", with: token)
   click_button("Go!")
+end
+
+When /^I rate each item "(.*?)"(?: within "([^\"]*)")?$/ do |rating, selector|
+  param_value = get_param_value("category", current_url)
+  items = get_items_on_page(param_value)
+  with_scope(selector) do
+    items.each do |item|
+      page.select(rating, from: "#{item[:name]}-rating")
+    end
+  end
+end
+
+When /^I comment each item "(.*?)"(?: within "([^\"]*)")?$/ do |comment, selector|
+  param_value = get_param_value("category", current_url)
+  items = get_items_on_page(param_value)
+  with_scope(selector) do
+    items.each do |item|
+      page.fill_in("#{item[:name]}-comment", with: comment)
+    end
+  end
+end
+
+Then /^there is no RCR with the token "(.*?)"$/ do |token|
+  assert_equal(false, RCR.token_exists_for_term?(token, @term[:year], @term[:term]))
 end
 
 Then /^I should see the "(.*?)" parameter on the page(?: within "([^\"]*)")?$/ do |param, selector|
@@ -95,10 +115,12 @@ end
 Then /^clicking (".+") within "(.*?)" should save my ratings to the database$/ do |labels, selector|
   found = find_which_button(labels, selector)
   if found
-    page.click_button(found)
-    rcr = RCR.where(token: @rcr.token)
-    items_on_page = get_items_on_page(get_param_value("category"))
-    items_on_page.each {|item| assert(rcr.room_items.where(name: item), "Item: #{item} not saved.")}
+    with_scope(selector) do
+      page.click_button(found)
+    end
+    rcr = RCR.where(token: @rcr.token).first  
+    items_on_page = get_items_on_page(get_param_value("category", current_url))
+    items_on_page.each {|item| assert(rcr.room_items.where(name: item).first, "Item \"#{item[:name]}\" not saved.")}
   else
     raise "Button not found!"
   end  

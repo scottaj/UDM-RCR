@@ -6,6 +6,7 @@ require File.join(File.dirname(__FILE__), '..', '..', 'main.rb')
 
 require 'capybara'
 require 'capybara/cucumber'
+require 'capybara-webkit'
 require 'test/unit/assertions'
 require 'database_cleaner'
 require 'database_cleaner/cucumber'
