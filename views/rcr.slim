@@ -1,16 +1,28 @@
 coffee:
   $ ->
-    ratings = []
-    $("#center").find("div.item").each(() ->
-      ratings.push([$(this).find("h4").text(), $(this).find("option:selected").val(), $(this).find("textarea").val]))
+    getRatings = () ->
+      ratings = []  
+      $("#center div.item").each( () ->
+        item = []
+        item.push($(this).find("h4").text())
+        item.push($(this).find("select").val())
+        item.push($(this).find("textarea").val())
+        ratings.push(item))
+      return ratings
     $("#previous").click( () ->
-      $.post("/previouscategory", {ratings: ratings}, (data) ->
+      ratings = getRatings()
+      category = GetURLParameter(category)
+      $.post("/previouscategory", {ratings: ratings, category: category}, (data) ->
       ))
     $("#next").click( () ->
-      $.post("/nextcategory", {ratings: ratings}, (data) ->
+      ratings = getRatings()
+      category = GetURLParameter(category)
+      $.post("/nextcategory", {ratings: ratings, category: category}, (data) ->
       ))
     $("#submit").click( () ->
-      $.post("/submit", {ratings: ratings}, (data) ->
+      ratings = getRatings()
+      category = GetURLParameter(category)
+      $.post("/submit", {ratings: ratings, category: category}, (data) ->
       ))
 div class="span2" id="right"
 div class="span8" id="center"

@@ -12,6 +12,7 @@ class RCRApp < Sinatra::Base
   configure do
     enable :sessions
 
+    
     Mongoid.configure do |config|
       if ENV['MONGOLAB_URI']
         uri = URI.parse(ENV['MONGOLAB_URI'])
@@ -30,7 +31,7 @@ class RCRApp < Sinatra::Base
     end
 
     Slim::Engine.set_default_options :pretty => true
-
+    
     @@room_info = RoomInfo.new("site-config.yml")
   end
 
@@ -49,6 +50,19 @@ class RCRApp < Sinatra::Base
         end
       end
       return items
+    end
+
+    def get_current_rcr(token, year, term)
+      RCR.get_rcr_for_term_by_token(token, year, term)
+    end
+
+    def save_ratings(ratings, category, rcr)
+      ratings.each_value do |rating|
+        rcr.room_items.create(category: category,
+                              name: rating[0],
+                              rating: rating[1].to_i,
+                              comments: rating[2])
+      end
     end
   end
 
@@ -72,7 +86,7 @@ class RCRApp < Sinatra::Base
   end
 
   get '/confirm' do
-    rcr = RCR.get_rcr_for_term_by_token(session[:token], session[:active_term][:year], session[:active_term][:term])
+    rcr = get_current_rcr(session[:token], session[:active_term][:year], session[:active_term][:term])
     name = "#{rcr.first_name} #{rcr.last_name}"
     room = "#{rcr.building} #{rcr.room_number}"
     term = "#{session[:active_term][:term]} #{session[:active_term][:year]}"
@@ -80,7 +94,7 @@ class RCRApp < Sinatra::Base
   end
   
   get '/RCR' do
-    rcr = RCR.get_rcr_for_term_by_token(session[:token], session[:active_term][:year], session[:active_term][:term])
+    rcr = get_current_rcr(session[:token], session[:active_term][:year], session[:active_term][:term])
     name = "#{rcr.first_name} #{rcr.last_name}"
     room = "#{rcr.building} #{rcr.room_number}"
     categories = @@room_info.get_categories_for_area(@@room_info.get_area_for_room(rcr.building, rcr.room_number))
@@ -98,6 +112,21 @@ class RCRApp < Sinatra::Base
     else
       redirect "/RCR?category=#{categories[0]}"
     end
+  end
+
+  post '/previouscategory' do
+    rcr = get_current_rcr(session[:token], session[:active_term][:year], session[:active_term][:term])
+    save_ratings(params[:ratings], params[:category], rcr)
+  end
+
+  post '/nextcategory' do
+    rcr = get_current_rcr(session[:token], session[:active_term][:year], session[:active_term][:term])
+    save_ratings(params[:ratings], params[:category], rcr)
+  end
+
+  post '/submit' do
+    rcr = get_current_rcr(session[:token], session[:active_term][:year], session[:active_term][:term])
+    save_ratings(params[:ratings], params[:category], rcr)
   end
 end
 

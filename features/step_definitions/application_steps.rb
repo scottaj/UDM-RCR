@@ -118,9 +118,10 @@ Then /^clicking (".+") within "(.*?)" should save my ratings to the database$/ d
     with_scope(selector) do
       page.click_button(found)
     end
+    sleep(2) # wait for ajax request to update rcr.
     rcr = RCR.where(token: @rcr.token).first  
     items_on_page = get_items_on_page(get_param_value("category", current_url))
-    items_on_page.each {|item| assert(rcr.room_items.where(name: item).first, "Item \"#{item[:name]}\" not saved.")}
+    items_on_page.each {|item| assert(rcr.room_items.where(name: item[:name]).first, "Item \"#{item[:name]}\" not saved.")}
   else
     raise "Button not found!"
   end  
