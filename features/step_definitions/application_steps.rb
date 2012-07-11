@@ -70,6 +70,11 @@ When /^I comment each item "(.*?)"(?: within "([^\"]*)")?$/ do |comment, selecto
   end
 end
 
+Then /^the "(.*?)" parameter should be "(.*?)"$/ do |param, value|
+  param_value = get_param_value(param, current_url)
+  assert_equal(param_value, value)
+end
+
 Then /^there is no RCR with the token "(.*?)"$/ do |token|
   assert_equal(false, RCR.token_exists_for_term?(token, @term[:year], @term[:term]))
 end
