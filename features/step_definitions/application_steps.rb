@@ -75,6 +75,23 @@ Then /^the "(.*?)" parameter should be "(.*?)"$/ do |param, value|
   assert_equal(param_value, value)
 end
 
+Then /^the "(.*?)" parameter should be saved$/ do |param|
+  @parameter_value = get_param_value(param, current_url)
+  assert(@parameter_value)
+end
+
+Then /^the "(.*?)" parameter should be different than the one I saved$/ do |param|
+  sleep(2)
+  value = get_param_value(param, current_url)
+  assert(@parameter_value != value, "#{value} is still #{@parameter_value}")
+end
+
+Then /^the "(.*?)" parameter should be the same as the one I saved$/ do |param|
+  sleep(2)
+  value = get_param_value(param, current_url)
+  assert_equal(@parameter_value, value, "#{value} is not #{@parameter_value}")
+end
+
 Then /^there is no RCR with the token "(.*?)"$/ do |token|
   assert_equal(false, RCR.token_exists_for_term?(token, @term[:year], @term[:term]))
 end
@@ -120,12 +137,12 @@ end
 Then /^clicking (".+") within "(.*?)" should save my ratings to the database$/ do |labels, selector|
   found = find_which_button(labels, selector)
   if found
+    items_on_page = get_items_on_page(get_param_value("category", current_url))
     with_scope(selector) do
       page.click_button(found)
     end
-    sleep(2) # wait for ajax request to update rcr.
-    rcr = RCR.where(token: @rcr.token).first  
-    items_on_page = get_items_on_page(get_param_value("category", current_url))
+    sleep(3) # wait for ajax request to update rcr.
+    rcr = RCR.where(token: @rcr.token, term_year: @rcr.term_year, term_name: @rcr.term_name).first  
     items_on_page.each {|item| assert(rcr.room_items.where(name: item[:name]).first, "Item \"#{item[:name]}\" not saved.")}
   else
     raise "Button not found!"

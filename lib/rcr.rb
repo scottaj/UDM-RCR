@@ -31,4 +31,15 @@ class RCR
   def RCR.get_rcr_for_term_by_token(token, term_year, term_name)
     return RCR.where(token: token, term_year: term_year, term_name: term_name).first
   end
+
+  def RCR.bupdate_or_create_room_item(rcr_params, room_item_params)
+    rcr = RCR.where(rcr_params).first
+    found = rcr.room_items.where(room_item_params[:name]).first
+    if found
+      found.update(room_item_params)
+      rcr.save!
+    else
+      rcr.room_items.create(room_item_params)
+    end
+  end
 end

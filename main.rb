@@ -4,6 +4,7 @@ require 'slim'
 require 'mongoid'
 require 'yaml'
 require 'uri'
+require 'coffee-script'
 
 require_relative 'lib/rcr'
 require_relative 'lib/room_info'
@@ -44,30 +45,29 @@ class RCRApp < Sinatra::Base
       items = @@room_info.get_items_for_room(rcr.building, rcr.room_number).keep_if {|item| item[:category] == category}
       rated_items = rcr.room_items.where(category: category)
       rated_items.each do |item|
-        if items.index {|i| item.name == i[:name]}
-          i[:rating] = item.rating
-          i[:comments] = item.comments
+      found = items.index {|i| item.name == i[:name]}
+        if found
+          items[found][:rating] = item.rating
+          items[found][:comments] = item.comments
         end
       end
       return items
     end
 
-    def get_current_rcr(token, year, term)
-      RCR.get_rcr_for_term_by_token(token, year, term)
+    def get_current_rcr()
+      RCR.get_rcr_for_term_by_token(session[:token], session[:active_term][:year], session[:active_term][:term])
     end
 
     def save_ratings(ratings, category, rcr)
+    
       ratings.each_value do |rating|
-        rcr.room_items.create(category: category,
-                              name: rating[0],
-                              rating: rating[1].to_i,
-                              comments: rating[2])
+        RCR.update_or_create_room_item({_id: rcr._id},
+                                       {category: category,
+                                         name: rating[0],
+                                         rating: rating[1].to_i,
+                                         comments: rating[2]})
       end
     end
-  end
-
-  before /\/admin.*/ do
-    
   end
 
   get '/' do
@@ -86,7 +86,7 @@ class RCRApp < Sinatra::Base
   end
 
   get '/confirm' do
-    rcr = get_current_rcr(session[:token], session[:active_term][:year], session[:active_term][:term])
+    rcr = get_current_rcr()
     name = "#{rcr.first_name} #{rcr.last_name}"
     room = "#{rcr.building} #{rcr.room_number}"
     term = "#{session[:active_term][:term]} #{session[:active_term][:year]}"
@@ -94,7 +94,7 @@ class RCRApp < Sinatra::Base
   end
   
   get '/RCR' do
-    rcr = get_current_rcr(session[:token], session[:active_term][:year], session[:active_term][:term])
+    rcr = get_current_rcr()
     name = "#{rcr.first_name} #{rcr.last_name}"
     room = "#{rcr.building} #{rcr.room_number}"
     categories = @@room_info.get_categories_for_area(@@room_info.get_area_for_room(rcr.building, rcr.room_number))
@@ -115,17 +115,23 @@ class RCRApp < Sinatra::Base
   end
 
   post '/previouscategory' do
-    rcr = get_current_rcr(session[:token], session[:active_term][:year], session[:active_term][:term])
+    rcr = get_current_rcr()
     save_ratings(params[:ratings], params[:category], rcr)
+    categories = @@room_info.get_categories_for_area(@@room_info.get_area_for_room(rcr.building, rcr.room_number))
+    new_category = categories[categories.index(params[:category]) - 1]
+    return new_category
   end
 
   post '/nextcategory' do
-    rcr = get_current_rcr(session[:token], session[:active_term][:year], session[:active_term][:term])
+    rcr = get_current_rcr()
     save_ratings(params[:ratings], params[:category], rcr)
+    categories = @@room_info.get_categories_for_area(@@room_info.get_area_for_room(rcr.building, rcr.room_number))
+    new_category = categories[categories.index(params[:category]) + 1]
+    return new_category
   end
 
   post '/submit' do
-    rcr = get_current_rcr(session[:token], session[:active_term][:year], session[:active_term][:term])
+    rcr = get_current_rcr()
     save_ratings(params[:ratings], params[:category], rcr)
   end
 end

@@ -1,35 +1,9 @@
-coffee:
-  $ ->
-    getRatings = () ->
-      ratings = []  
-      $("#center div.item").each( () ->
-        item = []
-        item.push($(this).find("h4").text())
-        item.push($(this).find("select").val())
-        item.push($(this).find("textarea").val())
-        ratings.push(item))
-      return ratings
-    $("#previous").click( () ->
-      ratings = getRatings()
-      category = GetURLParameter(category)
-      $.post("/previouscategory", {ratings: ratings, category: category}, (data) ->
-      ))
-    $("#next").click( () ->
-      ratings = getRatings()
-      category = GetURLParameter(category)
-      $.post("/nextcategory", {ratings: ratings, category: category}, (data) ->
-      ))
-    $("#submit").click( () ->
-      ratings = getRatings()
-      category = GetURLParameter(category)
-      $.post("/submit", {ratings: ratings, category: category}, (data) ->
-      ))
 div class="span2" id="right"
 div class="span8" id="center"
-  div class="row-fluid"
-    h3 class="span4" = name
-    h3 class="span4" = room
-    h3 class="span4" = current_category
+  div class="row-fluid header-row"
+    h3 class="span4 hrow-name" = name
+    h3 class="span4 hrow-room" = room
+    h3 class="span4 hrow-category" = current_category
   - items.each do |item|
     div class="row-fluid"
       div class="span10 well item"
@@ -37,19 +11,19 @@ div class="span8" id="center"
         p = item[:description]
         div class="row-fluid rating"
           form type="submit" class="form-inline"
-            label for="rating" == "<strong>Rating:&nbsp&nbsp</strong>"
-            select name="rating" id="#{item[:name]}-rating"
-              option 
-              option 1 - Bad
-              option 2 - Poor
-              option 3 - Fair
-              option 4 - Good
-              option 5 - New
-            label for="comment" &nbsp&nbsp
-            textarea name="comment" id="#{item[:name]}-comment" class="input-xlarge" rows="2" placeholder="Add comments to your rating here"
+            div class="row-fluid"
+              label class="span1" for="rating" == "<strong>Rating:</strong>"
+              select name="rating" class="span3" id="#{item[:name]}-rating"
+                option 
+                option 1 - Bad
+                option 2 - Poor
+                option 3 - Fair
+                option 4 - Good
+                option 5 - New
+              textarea name="comment" class="span6" id="#{item[:name]}-comment" class="input-xlarge" rows="2" placeholder="Add comments to your rating here"
   div class="row-fluid" id="continue"
     span class="span6"
-    - if page_type == "middle"
+    - unless page_type == "first"
       button class="span2 btn-large btn-info" id="previous" Previous
     - else
       span class="span2"
@@ -64,3 +38,26 @@ div class="span2" id="left"
       - categories.each do |category|
         li 
           a href="/RCR?category=#{category}" = category
+coffee:
+  $ ->
+    getRatings = () ->
+      ratings = []  
+      $("#center div.item").each( () ->
+        item = []
+        item.push($(this).find("h4").text())
+        item.push($(this).find("select").val())
+        item.push($(this).find("textarea").val())
+        ratings.push(item))
+      return ratings
+
+    $("#previous").click( () ->
+      $.post("/previouscategory", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
+        window.location = "/RCR?category=#{data}";
+      ))
+    $("#next").click( () ->
+      $.post("/nextcategory", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
+        window.location = "/RCR?category=#{data}";
+      ))
+    $("#submit").click( () ->
+      $.post("/submit", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
+      ))
