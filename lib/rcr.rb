@@ -32,7 +32,7 @@ class RCR
     return RCR.where(token: token, term_year: term_year, term_name: term_name).first
   end
 
-  def RCR.bupdate_or_create_room_item(rcr_params, room_item_params)
+  def RCR.update_or_create_room_item(rcr_params, room_item_params)
     rcr = RCR.where(rcr_params).first
     found = rcr.room_items.where(room_item_params[:name]).first
     if found
