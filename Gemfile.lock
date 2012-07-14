@@ -72,6 +72,8 @@ GEM
     multi_json (1.3.6)
     netrc (0.7.4)
     nokogiri (1.5.4)
+    prickle (0.0.6)
+      capybara
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
@@ -128,6 +130,7 @@ DEPENDENCIES
   database_cleaner
   heroku
   mongoid
+  prickle
   rake
   rdoc
   ruby_parser

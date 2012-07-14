@@ -62,8 +62,39 @@ Feature: Users should be able to submit an RCR
     When I press "Previous" within "#continue"
     Then the "category" parameter should be the same as the one I saved
 
+  @javascript
   Scenario: Pressing "submit" should cause an RCR to be validated as complete and give a message if it isn't
-      
+    Given I am on the home page
+    And an RCR with token "abc123" exists for "Jane Doe" in room "210" of the building "East Quad"
+    When I log in with the token "abc123"
+    And I follow "Yes" within "#confirm"
+    And I rate each item "5" within "#center"
+    And I comment each item "Comment Here" within "#center"
+    And I press "Next"
+    And I wait "3" seconds
+    And I press "Next"
+    And I wait "3" seconds
+    And I rate each item "5" within "#center"
+    And I comment each item "Comment Here" within "#center" 
+    And I submit the RCR
+    And I wait "3" seconds
+    Then I should be on the RCR page
+    And the RCR with token "abc123" should be marked as incomplete
+    When I press "Previous"
+    And I wait "3" seconds
+    And I rate each item "5" within "#center"
+    And I comment each item "Comment Here" within "#center"
+    And I press "Next"
+    And I submit the RCR
+    And I wait "3" seconds
+    Then I should be on the Submission confirmation page
+    And the RCR with token "abc123" should be marked as complete
+    
+    
+  Scenario: Trying to submit an RCR for a room with no assignment should go to an error page
+    
+
+    
   Scenario: Pressing "submit" should mark an RCR complete and lock it for further editing
 
   Scenario: I should be able to leave a page and return to it having the same state

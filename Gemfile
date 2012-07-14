@@ -20,5 +20,6 @@ group :test do
   gem "cucumber"
   gem "cucumber-sinatra"
   gem "database_cleaner"
+  gem "prickle"
 end
 

@@ -10,6 +10,8 @@ require 'capybara-webkit'
 require 'test/unit/assertions'
 require 'database_cleaner'
 require 'database_cleaner/cucumber'
+require 'prickle/capybara'    # require
+
 
 Capybara.app = RCRApp
 Capybara.javascript_driver = :webkit
@@ -18,6 +20,7 @@ DatabaseCleaner.strategy = :truncation
 class RCRAppWorld
   include Capybara::DSL
   include Test::Unit::Assertions
+  include Prickle::Capybara  # include  Prickle
 end
 
 World do

@@ -61,12 +61,23 @@ class RCRApp < Sinatra::Base
     def save_ratings(ratings, category, rcr)
     
       ratings.each_value do |rating|
-        RCR.update_or_create_room_item({_id: rcr._id},
-                                       {category: category,
+        if rating[1].to_i > 0        
+        rcr.update_or_create_room_item({category: category,
                                          name: rating[0],
                                          rating: rating[1].to_i,
                                          comments: rating[2]})
+        end
       end
+    end
+
+    def get_item_names_for_current_rcr()
+      rcr = get_current_rcr
+      return @@room_info.get_items_for_room(rcr.building, rcr.room_number).map {|item| item[:name]}
+    end
+
+    def get_rated_item_names()
+      rcr = get_current_rcr
+      return rcr.get_rated_items()
     end
   end
 
@@ -133,9 +144,25 @@ class RCRApp < Sinatra::Base
   post '/submit' do
     rcr = get_current_rcr()
     save_ratings(params[:ratings], params[:category], rcr)
+    all_items = get_item_names_for_current_rcr()
+    rated_items = get_rated_item_names()
+    if (all_items - rated_items).empty?
+      rcr.mark_complete
+      session[:submitted] = true
+      return "complete"
+    else
+      return "incomplete"
+    end
+  end
+
+  get '/submit' do
+    if session[:submitted]
+      slim :rcr_complete, locals: {page_title: "RCR Complete"}
+    else
+      error(404)
+    end
   end
 end
-
 
 if __FILE__ == $0
   port = `echo $PORT`.to_i

@@ -32,14 +32,22 @@ class RCR
     return RCR.where(token: token, term_year: term_year, term_name: term_name).first
   end
 
-  def RCR.update_or_create_room_item(rcr_params, room_item_params)
-    rcr = RCR.where(rcr_params).first
-    found = rcr.room_items.where(room_item_params[:name]).first
+  def update_or_create_room_item(room_item_params)
+    found = self.room_items.where(name: room_item_params[:name]).first
     if found
-      found.update(room_item_params)
-      rcr.save!
+      found.update_attributes(room_item_params)
+      self.save
     else
-      rcr.room_items.create(room_item_params)
+      self.room_items.create(room_item_params)
     end
+  end
+
+  def get_rated_items()
+    return self.room_items.map {|item| item.name if (1..5).include?(item.rating)}
+  end
+
+  def mark_complete()
+    self.update_attribute(:complete, true)
+    self.save
   end
 end

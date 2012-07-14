@@ -14,13 +14,9 @@ div class="span8" id="center"
             div class="row-fluid"
               label class="span1" for="rating" == "<strong>Rating:</strong>"
               select name="rating" class="span3" id="#{item[:name]}-rating"
-                option 
-                option 1 - Bad
-                option 2 - Poor
-                option 3 - Fair
-                option 4 - Good
-                option 5 - New
-              textarea name="comment" class="span6" id="#{item[:name]}-comment" class="input-xlarge" rows="2" placeholder="Add comments to your rating here"
+                - ["", "1 - Bad", "2 - Poor", "3 - Fair", "4 - Good", "5 - New"].each do |option|
+                  option value="#{option.to_i}" selected="#{'selected' if item[:rating] == option.to_i}" = "#{option}"
+              textarea name="comment" class="span6" id="#{item[:name]}-comment" class="input-xlarge" rows="2" placeholder="Add comments to your rating here" = "#{item[:comments] if item[:comments]}"
   div class="row-fluid" id="continue"
     span class="span6"
     - unless page_type == "first"
@@ -36,12 +32,13 @@ div class="span2" id="left"
     h3 Categories:
     ul
       - categories.each do |category|
-        li 
+        li
           a href="/RCR?category=#{category}" = category
+
 coffee:
   $ ->
     getRatings = () ->
-      ratings = []  
+      ratings = []
       $("#center div.item").each( () ->
         item = []
         item.push($(this).find("h4").text())
@@ -52,12 +49,16 @@ coffee:
 
     $("#previous").click( () ->
       $.post("/previouscategory", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
-        window.location = "/RCR?category=#{data}";
+        window.location = "/RCR?category=#{data}"
       ))
     $("#next").click( () ->
       $.post("/nextcategory", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
-        window.location = "/RCR?category=#{data}";
+        window.location = "/RCR?category=#{data}"
       ))
     $("#submit").click( () ->
       $.post("/submit", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
+        if data == "complete"
+          window.location = "/submit"
+        else if data == "incomplete"
+          alert("RCR not complete!")
       ))

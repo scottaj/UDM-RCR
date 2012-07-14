@@ -29,6 +29,14 @@ module AppCukeHelpers
     end
     return found
   end
+
+  def handle_js_confirm(accept=true)
+    page.evaluate_script "window.original_confirm_function = window.confirm"
+    page.evaluate_script "window.confirm = function(msg) { return #{!!accept}; }"
+    yield
+  ensure
+    page.evaluate_script "window.confirm = window.original_confirm_function"
+  end
 end
 World(AppCukeHelpers)
 
@@ -70,6 +78,22 @@ When /^I comment each item "(.*?)"(?: within "([^\"]*)")?$/ do |comment, selecto
   end
 end
 
+When /^I wait "(\d+?)" seconds$/ do |time|
+  sleep(time.to_f)
+end
+
+When /^I submit the RCR$/ do
+  popup.accept {page.click_button("Submit")}
+end
+
+Then /^the RCR with token "(.*?)" should be marked as complete$/ do |token|
+  assert(RCR.where(token: token).first.complete)
+end
+
+Then /^the RCR with token "(.*?)" should be marked as incomplete$/ do |token|
+  assert_equal(false, RCR.where(token: token).first.complete)  
+end
+
 Then /^the "(.*?)" parameter should be "(.*?)"$/ do |param, value|
   param_value = get_param_value(param, current_url)
   assert_equal(param_value, value)
@@ -81,13 +105,15 @@ Then /^the "(.*?)" parameter should be saved$/ do |param|
 end
 
 Then /^the "(.*?)" parameter should be different than the one I saved$/ do |param|
-  sleep(2)
+  sleep(2) # Sleep so that the page has time to change from the
+  # previous step
   value = get_param_value(param, current_url)
   assert(@parameter_value != value, "#{value} is still #{@parameter_value}")
 end
 
 Then /^the "(.*?)" parameter should be the same as the one I saved$/ do |param|
-  sleep(2)
+  sleep(2) # sleep so that the page has time to change from the
+  # previous step
   value = get_param_value(param, current_url)
   assert_equal(@parameter_value, value, "#{value} is not #{@parameter_value}")
 end
