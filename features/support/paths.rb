@@ -10,18 +10,20 @@ module NavigationHelpers
   def path_to(page_name)
     case page_name
 
-    when /the home\s?page/
+    when /the home\s?page/i
       '/'
-    when /the confirmation page/
+    when /the confirmation page/i
       '/confirm'
     when /the RCR page/
       '/RCR'
-    when /the confirmation help page/
+    when /the confirmation help page/i
       '/help/identity'
-    when /the token help page/
+    when /the token help page/i
       '/help/token'
-    when /the Submission confirmation page/
+    when /the Submission confirmation page/i
       '/submit'
+    when /the assignment not found page/i
+      '/notfound'
     else
       raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
         "Now, go and add a mapping in #{__FILE__}"

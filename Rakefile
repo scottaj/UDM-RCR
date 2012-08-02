@@ -65,7 +65,7 @@ task :db_seed do
                  room_number: 210,
                  complete: false)
 
-    db_conn.insert(token: "321cba",
+  db_conn.insert(token: "321cba",
                  term_year: 2013,
                  term_name: "Fall",
                  first_name: "Jane",

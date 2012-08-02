@@ -41,7 +41,7 @@ end
 World(AppCukeHelpers)
 
 Given /^an RCR with token "(.*?)" exists for "(.*?)\s(.*?)" in room "(.*?)" of the building "(.*?)"$/ do |token, first_name, last_name, room, building|
-  @rcr = RCR.create(token: "abc123",
+  @rcr = RCR.create(token: token,
              term_year: @term[:year],
              term_name: @term[:term],
              first_name: first_name,

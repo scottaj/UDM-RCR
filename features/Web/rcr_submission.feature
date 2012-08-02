@@ -92,9 +92,13 @@ Feature: Users should be able to submit an RCR
     
     
   Scenario: Trying to submit an RCR for a room with no assignment should go to an error page
+    Given I am on the home page
+    And an RCR with token "9x8y7z" exists for "Pablo Escobar" in room "3257" of the building "Columbia"
+    When I log in with the token "9x8y7z"
+    Then I should be on the confirmation page
+    And I follow "Yes" within "#confirm"
+    Then I should be on the Assignment not found page
     
-
-    
-  Scenario: Pressing "submit" should mark an RCR complete and lock it for further editing
+  Scenario: Submitting an RCR should lock it from further editing.
 
   Scenario: I should be able to leave a page and return to it having the same state

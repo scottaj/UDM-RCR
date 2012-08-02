@@ -81,6 +81,10 @@ class RCRApp < Sinatra::Base
     end
   end
 
+  
+#### ROUTING ####
+
+  
   get '/' do
     # Load active term data
     File.open('active.yml', 'r') {|f| session[:active_term] = YAML::load(f)}
@@ -108,8 +112,11 @@ class RCRApp < Sinatra::Base
     rcr = get_current_rcr()
     name = "#{rcr.first_name} #{rcr.last_name}"
     room = "#{rcr.building} #{rcr.room_number}"
-    categories = @@room_info.get_categories_for_area(@@room_info.get_area_for_room(rcr.building, rcr.room_number))
-
+    begin
+      categories = @@room_info.get_categories_for_area(@@room_info.get_area_for_room(rcr.building, rcr.room_number))
+    rescue RuntimeError
+      redirect '/notfound'
+    end
     if params[:category]
       if params[:category] == categories[0]
         page_type = "first"
@@ -161,6 +168,10 @@ class RCRApp < Sinatra::Base
     else
       error(404)
     end
+  end
+
+  get '/notfound' do
+    slim :not_found, locals: {page_title: "Error"}
   end
 end
 
