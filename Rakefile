@@ -3,17 +3,12 @@ require 'rake'
 require 'rake/clean'
 require 'uri'
 
-unless ENV['PROD']
+begin
   require 'rdoc/task'
   require 'rake/testtask'
   require 'cucumber'
   require 'cucumber/rake/task'
-end
 
-task :default do
-end
-
-unless ENV['PROD']
   RDoc::Task.new do |rdoc|
     files =['README.md', 'lib/**/*.rb', 'lib/**/*.rbw', 'main.rb']
     rdoc.external = true
@@ -33,6 +28,11 @@ unless ENV['PROD']
   Cucumber::Rake::Task.new(:features) do |t|
     t.cucumber_opts = "features --format pretty"
   end
+
+  task "default" => :features
+  task "default" => :test
+rescue LoadError
+
 end
 
 task :db_seed do
@@ -108,7 +108,5 @@ end
 
 task "db_seed" => :db_clean
 
-unless ENV['PROD']
-  task "default" => :features
-  task "default" => :test
+task :default do
 end
