@@ -1,6 +1,7 @@
 require 'bundler/setup'
 require 'rake'
 require 'rake/clean'
+require 'uri'
 
 unless ENV['PROD']
   require 'rdoc/task'
@@ -37,7 +38,15 @@ end
 task :db_seed do
   require_relative "lib/rcr"
   require "mongo"
-  db_conn = Mongo::Connection.new.db("rcr_app").collection("rcrs")
+  if ENV['MONGOLAB_URI']
+    uri = URI.parse(ENV['MONGOLAB_URI'])
+    conn = Mongo::Connection.from_uri(ENV['MONGOLAB_URI'])
+    db_conn = conn.db(uri.path.gsub(/^\//, '')).collection("rcrs")
+  else
+    name = "rcr_app"
+    host = "localhost"
+    db_conn = Mongo::Connection.new.db(name).collection("rcrs")
+  end
 
   # insert dummy data
   db_conn.insert(token: "abc123",
