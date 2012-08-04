@@ -52,6 +52,11 @@ Given /^an RCR with token "(.*?)" exists for "(.*?)\s(.*?)" in room "(.*?)" of t
              complete: false)
 end
 
+Given /^the RCR with token "(.*?)" is marked complete$/ do |token|
+  rcr = RCR.where(token: @rcr.token).first
+  rcr.mark_complete
+end
+
 When /^I log in with the token "(.*?)"$/ do |token|
   visit '/'
   fill_in("token", with: token)

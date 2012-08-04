@@ -93,8 +93,12 @@ class RCRApp < Sinatra::Base
 
   post '/' do
     if RCR.token_exists_for_term?(params[:token], session[:active_term][:year], session[:active_term][:term])
-      session[:token] = params[:token]
-      redirect '/confirm'
+      unless RCR.get_rcr_for_term_by_token(params[:token], session[:active_term][:year], session[:active_term][:term]).complete
+        session[:token] = params[:token]
+        redirect '/confirm'
+      else
+        slim :index, locals: {page_title: "Sign In", message: "RCR Already Completed!"}
+      end
     else
       slim :index, locals: {page_title: "Sign In", message: "Token not found!"}
     end

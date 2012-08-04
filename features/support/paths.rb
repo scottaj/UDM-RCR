@@ -24,6 +24,8 @@ module NavigationHelpers
       '/submit'
     when /the assignment not found page/i
       '/notfound'
+    when /the already complete page/i
+      '/locked'
     else
       raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
         "Now, go and add a mapping in #{__FILE__}"

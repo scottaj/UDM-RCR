@@ -100,5 +100,11 @@ Feature: Users should be able to submit an RCR
     Then I should be on the Assignment not found page
     
   Scenario: Submitting an RCR should lock it from further editing.
+    Given I am on the home page
+    And an RCR with token "abc123" exists for "Jane Doe" in room "210" of the building "East Quad"
+    And the RCR with token "abc123" is marked complete
+    When I log in with the token "abc123"
+    Then I should be on the home page
+    And I should see "RCR Already Completed!"
 
   Scenario: I should be able to leave a page and return to it having the same state
