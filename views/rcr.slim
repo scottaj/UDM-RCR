@@ -49,16 +49,17 @@ coffee:
 
     $("#previous").click( () ->
       $.post("/previouscategory", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
-        window.location = "/RCR?category=#{data}"
+        window.location.href = "/RCR?category=#{data}"
       ))
     $("#next").click( () ->
       $.post("/nextcategory", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
-        window.location = "/RCR?category=#{data}"
+        window.location.href = "/RCR?category=#{data}"
       ))
     $("#submit").click( () ->
       $.post("/submit", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
         if data == "complete"
-          window.location = "/submit"
-        else if data == "incomplete"
-          alert("RCR not complete!")
+          window.location.href = "/submit"
+        else
+          data = data.join("\n")  
+          alert("RCR not complete!\nIncomplete Items:\n#{data}")
       ))

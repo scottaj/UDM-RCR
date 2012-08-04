@@ -162,7 +162,8 @@ class RCRApp < Sinatra::Base
       session[:submitted] = true
       return "complete"
     else
-      return "incomplete"
+      content_type('application/json')
+      return JSON::dump(all_items - rated_items)
     end
   end
 
