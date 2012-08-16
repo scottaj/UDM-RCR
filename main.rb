@@ -8,6 +8,7 @@ require 'coffee-script'
 
 require_relative 'lib/rcr'
 require_relative 'lib/room_info'
+require_relative 'lib/area_mapping'
 
 class RCRApp < Sinatra::Base
   configure do

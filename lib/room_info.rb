@@ -1,5 +1,6 @@
 require 'yaml'
 require 'fileutils'
+require 'mongoid'
 
 ##
 # Uses a YAML configuration file to determine

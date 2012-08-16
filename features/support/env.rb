@@ -31,6 +31,30 @@ Before do
   @room_info = RoomInfo.new("site-config.yml")
   File.open('active.yml', 'r') {|f| @term = YAML::load(f)}
   DatabaseCleaner.start
+
+  mcnichols = Area.create(name: "McNichols")
+  mcnichols.items.create(category: "Furniture",
+                         name: "Bed",
+                         description: "The thing you sleep in.")
+  mcnichols.items.create(category: "Structural",
+                         name: "Ceiling",
+                         description: "Check for missing tiles, water damage, chips, etc.")
+  mcnichols.items.create(category: "Structural",
+                         name: "Floor",
+                         description: "Check for cracked tiles, scuff marks, stains, etc.")
+  mcnichols.items.create(category: "Structural",
+                         name: "Walls",
+                         description: "Check for holes, stickers, writing, etc.")
+  
+  quads = Area.create(name: "Quads")
+  quads.items.create(category: "Bathroom",
+                     name: "Shower",
+                     description: "Make sure shower works and has no missing tiles, etc.")
+
+  eqd = AreaMapping.create(name: "East Quad Double",
+                           building: "East Quad")
+  eqd.map_rooms("101-112, 114, 116, 201-216")
+  eqd.areas = [mcnichols, quads]
 end
 
 After do
