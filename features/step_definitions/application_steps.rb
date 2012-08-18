@@ -29,15 +29,8 @@ module AppCukeHelpers
     end
     return found
   end
-
-  def handle_js_confirm(accept=true)
-    page.evaluate_script "window.original_confirm_function = window.confirm"
-    page.evaluate_script "window.confirm = function(msg) { return #{!!accept}; }"
-    yield
-  ensure
-    page.evaluate_script "window.confirm = window.original_confirm_function"
-  end
 end
+
 World(AppCukeHelpers)
 
 Given /^an RCR with token "(.*?)" exists for "(.*?)\s(.*?)" in room "(.*?)" of the building "(.*?)"$/ do |token, first_name, last_name, room, building|
@@ -88,7 +81,8 @@ When /^I wait "(\d+?)" seconds$/ do |time|
 end
 
 When /^I submit the RCR$/ do
-  popup.accept {page.click_button("Submit")}
+  page.driver.accept_js_confirms!
+  page.click_button("Submit")
 end
 
 Then /^the RCR with token "(.*?)" should be marked as complete$/ do |token|
