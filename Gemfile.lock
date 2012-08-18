@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/thoughtbot/capybara-webkit.git
+  revision: af26babe24604310be60e9bf39405bef80951e8f
+  branch: master
+  specs:
+    capybara-webkit (0.12.0)
+      capybara (>= 1.0.0, < 1.2)
+      json
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -19,9 +28,6 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 0.1.4)
-    capybara-webkit (0.12.1)
-      capybara (>= 1.0.0, < 1.2)
-      json
     childprocess (0.3.2)
       ffi (~> 1.0.6)
     coffee-script (2.2.0)
@@ -131,7 +137,7 @@ PLATFORMS
 DEPENDENCIES
   bson_ext
   capybara
-  capybara-webkit
+  capybara-webkit!
   coffee-script
   cucumber
   cucumber-sinatra
