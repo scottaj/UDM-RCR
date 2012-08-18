@@ -27,8 +27,19 @@ begin
 
   Cucumber::Rake::Task.new(:features) do |t|
     t.cucumber_opts = "features --format pretty"
+    t.rcov = false
   end
-
+    
+  rule(/features:(.+)/) do |t|
+    match = /features:(.+)/.match(t.name)
+    name = match[1]
+    Cucumber::Rake::Task.new(name) do |t|
+      t.rcov = false
+      t.cucumber_opts = ["--name #{name}"]	
+    end	
+    Rake::Task[name].invoke
+  end
+  
   task "default" => [:test, :spec, :features]
 rescue LoadError
   puts "One of the testing libraries doesn't seemed to be installed."
