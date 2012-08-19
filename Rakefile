@@ -54,7 +54,7 @@ begin
     t.pattern = 'spec/**/*_spec.rb'	
   end
 rescue LoadError
-  puts "Couldn't require \"rspec/core/rake_task\". Is rspec installed?"
+  puts "Could not require rspec, Is rspec installed?"
   task :spec do |t|
     exit  	
   end	
