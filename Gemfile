@@ -1,19 +1,29 @@
-source "http://rubygems.org"
-gem "sinatra"
-gem "mongoid"
-gem "bson_ext"
-gem "slim"
-gem "rake"
-gem "thin"
-gem "coffee-script"
-gem "therubyracer"
+source :rubygems
 
+# Server requirements
+gem 'thin'
+# gem 'trinidad', :platform => 'jruby'
+
+# Project requirements
+gem 'rake'
+gem 'sinatra-flash', :require => 'sinatra/flash'
+
+# Development tools
 group :development do
   gem "heroku"
   gem "rdoc"
   gem "ruby_parser"
+  gem "pry"
 end
 
+# Component requirements
+gem 'slim'
+gem 'mongoid'
+gem 'bson_ext', :require => "mongo"
+gem "coffee-script"
+gem "therubyracer"
+
+# Test requirements
 group :test do
   gem "rspec"
   gem "capybara"
@@ -24,3 +34,8 @@ group :test do
   gem "prickle"
 end
 
+# Padrino Stable Gem
+gem 'padrino', '0.10.7'
+
+# Or Padrino Edge
+# gem 'padrino', :git => 'git://github.com/padrino/padrino-framework.git'
