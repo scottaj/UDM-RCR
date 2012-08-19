@@ -50,7 +50,7 @@ begin
  	
   desc "Run all examples"
   RSpec::Core::RakeTask.new(:spec) do |t|
-    t.rspec_opts = %w[--color -f d]
+    t.rspec_opts = %w[--color -f d --order random]
     t.pattern = 'spec/**/*_spec.rb'	
   end
 rescue LoadError
