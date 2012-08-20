@@ -1,1 +1,1 @@
-web: bundle exec ruby main.rb
+web: bundle exec padrino start
