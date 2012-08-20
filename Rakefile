@@ -3,62 +3,8 @@ require 'rake'
 require 'rake/clean'
 require 'uri'
 
-begin
-  require 'rdoc/task'
-  require 'rake/testtask'
-  require 'cucumber'
-  require 'cucumber/rake/task'
-
-  RDoc::Task.new do |rdoc|
-    files =['README.md', 'lib/**/*.rb', 'lib/**/*.rbw', 'main.rb']
-    rdoc.external = true
-    rdoc.rdoc_files.add(files)
-    rdoc.main = "README" # page to start on
-    rdoc.title = "RCR App Source Documentation"
-    rdoc.rdoc_dir = 'doc/rdoc' # rdoc output folder
-    rdoc.options << '--line-numbers'
-    rdoc.options << '--all'
-    rdoc.options << '--promiscuous'
-  end
-
-  Rake::TestTask.new do |t|
-    t.test_files = FileList['test/**/*.rb']
-  end
-
-  Cucumber::Rake::Task.new(:features) do |t|
-    t.cucumber_opts = "features --format pretty"
-    t.rcov = false
-  end
-    
-  rule(/features:(.+)/) do |t|
-    match = /features:(.+)/.match(t.name)
-    name = match[1]
-    Cucumber::Rake::Task.new(name) do |t|
-      t.rcov = false
-      t.cucumber_opts = ["--name #{name}"]	
-    end	
-    Rake::Task[name].invoke
-  end
-  
-  task "default" => [:test, :spec, :features]
-rescue LoadError
-  puts "One of the testing libraries doesn't seemed to be installed."
-end
-
-begin
-  require "rspec/core/rake_task"
- 	
-  desc "Run all examples"
-  RSpec::Core::RakeTask.new(:spec) do |t|
-    t.rspec_opts = %w[--color -f d --order random]
-    t.pattern = 'spec/**/*_spec.rb'	
-  end
-rescue LoadError
-  puts "Could not require rspec, Is rspec installed?"
-  task :spec do |t|
-    exit  	
-  end	
-end
+import 'spec/spec.rake'
+import "features/cucumber.rake"
 
 desc "Seed the current database with dummy data"
 task :db_seed do
@@ -163,12 +109,16 @@ end
 
 task :db_seed => :db_clean
 
-desc "Run all tests"
+
 task :default do
 end
 
-desc "Run continuous integration tests"
-task :ci do
+begin
+  desc "Run continuous integration tests"
+  task :ci do
+  end
+  
+  task :ci => [:spec, :features]
+rescue LoadError
+  puts "Can\'t run test suites, are you in a production environment?"
 end
-
-task :ci => :default

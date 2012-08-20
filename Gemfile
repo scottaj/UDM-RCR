@@ -11,7 +11,6 @@ gem 'sinatra-flash', :require => 'sinatra/flash'
 # Development tools
 group :development do
   gem "heroku"
-  gem "rdoc"
   gem "ruby_parser"
   gem "pry"
 end
