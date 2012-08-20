@@ -18,7 +18,7 @@ end
 # Component requirements
 gem 'slim'
 gem 'mongoid'
-gem 'bson_ext', :require => "mongo"
+gem 'bson_ext'
 gem "coffee-script"
 gem "therubyracer"
 

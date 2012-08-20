@@ -8,20 +8,10 @@ import "features/cucumber.rake"
 
 desc "Seed the current database with dummy data"
 task :db_seed do
-  require "mongoid"
-  require_relative "lib/rcr"
-  require_relative "lib/area_mapping"
-  Mongoid.configure do |config|
-    if ENV['MONGOLAB_URI']
-      uri = URI.parse(ENV['MONGOLAB_URI'])
-      conn = Mongo::Connection.from_uri(ENV['MONGOLAB_URI'])
-      config.master = conn.db(uri.path.gsub(/^\//, ''))
-    else
-      name = "rcr_app"
-      host = "localhost"
-      config.master = Mongo::Connection.new.db(name)
-    end
-  end
+  ENV['MONGOID_ENV'] = ENV['db_env'] || 'development'
+
+  require_relative 'config/database'
+  Dir[File.dirname(__FILE__) + '/app/models/*.rb'].each {|file| require file }
 
   # Insert dummy config
   mcnichols = Area.create(name: "McNichols")
@@ -92,19 +82,14 @@ end
 
 desc "Clear out the current database"
 task :db_clean do
-  require_relative "lib/rcr"
-  require "mongo"
-  if ENV['MONGOLAB_URI']
-    uri = URI.parse(ENV['MONGOLAB_URI'])
-    conn = Mongo::Connection.from_uri(ENV['MONGOLAB_URI'])
-    db_conn = conn.db(uri.path.gsub(/^\//, ''))
-  else
-    name = "rcr_app"
-    host = "localhost"
-    db_conn = Mongo::Connection.new.db(name)
-  end
-  collections = ["rcrs", "areas", "area_mappings"]
-  collections.each {|collection| db_conn.collection(collection).drop}
+  ENV['MONGOID_ENV'] = ENV['db_env'] || 'development'
+
+  require_relative 'config/database'
+  Dir[File.dirname(__FILE__) + '/app/models/*.rb'].each {|file| require file }
+  
+  Area.destroy_all
+  AreaMapping.destroy_all
+  RCR.destroy_all
 end
 
 task :db_seed => :db_clean

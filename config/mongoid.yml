@@ -1,0 +1,19 @@
+  development:
+    sessions:
+      default:
+        hosts:
+          - localhost:27017
+        database: rcr_app_development
+  test:
+    sessions:
+      default:
+        hosts:
+          - localhost:27017
+        database: rcr_app_testing
+  production:
+    sessions:
+      default:
+        hosts:
+          - localhost:27017
+        database: rcr_app_production
+          

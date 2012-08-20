@@ -1,15 +1,7 @@
+require 'bundler/setup'
+require 'mongoid'
 
-# Connection.new takes host, port
-host = 'localhost'
-port = Mongo::Connection::DEFAULT_PORT
-
-database_name = case Padrino.env
-  when :development then 'rcr_app_development'
-  when :production  then 'rcr_app_production'
-  when :test        then 'rcr_app_test'
-end
-
-Mongoid.database = Mongo::Connection.new(host, port).db(database_name)
+Mongoid.load!('config/mongoid.yml')
 
 # You can also configure Mongoid this way
 # Mongoid.configure do |config|
