@@ -15,7 +15,7 @@ describe "AreaMapping" do
       
       a.persisted?.should be_false
       am.save
-      a.persisted?.should be_true      
+      a.persisted?.should be_true       
     end
     
     describe "Finding area names for a mapping" do
@@ -49,7 +49,10 @@ describe "AreaMapping" do
         am1 = AreaMapping.create(name: "test", building: "test", rooms: Set[1,2,3])
         am2 = AreaMapping.create(name: "test2", building: "test", rooms: Set[6,7,8])
         am3 = AreaMapping.new(name: "test3", building: "test", rooms: Set[3,4,5,6])
-        lambda {am3.save}.should raise_error
+        begin
+          am3.save
+        rescue MappingError
+        end
         am3.conflicts.should == {"test" => Set[3], "test2" => Set[6]}
      
       end

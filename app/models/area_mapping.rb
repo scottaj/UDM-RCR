@@ -30,8 +30,8 @@ class AreaMapping
   attr_accessor :conflicts
 
   def check_for_duplicates()
-    duplicate = AreaMapping.where(building: self.building).in(rooms: self.rooms)
-    
+    duplicate = AreaMapping.where(building: self.building).in(rooms: self.rooms.to_a) # Had to change this to an array when I switched to mongoid 3, a Set worked fine before...
+
     unless duplicate.empty?
       @conflicts = {}
       duplicate.each do |mapping|
@@ -50,8 +50,8 @@ class AreaMapping
     save_areas
   end
 
-  def self.get_area_names_for_room(building, room)
-    mapping = self.where(building: building, rooms: room).first
+  def self.get_area_names_for_room(building, room_number)
+    mapping = self.where(building: building, rooms: room_number).first
     return Set[] unless mapping
     return Set.new(mapping.areas.map {|area| area.name})
   end
