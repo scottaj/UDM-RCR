@@ -34,13 +34,17 @@ class Term
   end
 
   def self.active_term()
-    query = self.and(:start_date.lte => Date.today, :end_date.gte => Date.today)
+    term = self.current_term
     i = 1
-    while query.empty? and not self.all.empty?
-      query = self.between(start_date: (Date.today - i)..(Date.today + i))
+    until term or self.all.empty?
+      term = self.between(start_date: (Date.today - i)..(Date.today + i)).first
       i += 1
     end
 
-    return query.first
+    return term
+  end
+
+  def self.current_term()
+    return self.and(:start_date.lte => Date.today, :end_date.gte => Date.today).first
   end
 end

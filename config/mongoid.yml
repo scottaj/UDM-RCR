@@ -4,16 +4,23 @@
         hosts:
           - localhost:27017
         database: rcr_app_development
+        options:
+          raise_not_found_error: false
   test:
     sessions:
       default:
         hosts:
           - localhost:27017
         database: rcr_app_testing
+        options:
+          raise_not_found_error: false  
   production:
     sessions:
       default:
         hosts:
           - localhost:27017
         database: rcr_app_production
+        options:
+          raise_not_found_error: false
+          allow_dynamic_fields: false
           

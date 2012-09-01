@@ -35,14 +35,13 @@ World(AppCukeHelpers)
 
 Given /^an RCR with token "(.*?)" exists for "(.*?)\s(.*?)" in room "(.*?)" of the building "(.*?)"$/ do |token, first_name, last_name, room, building|
   @rcr = RCR.create(token: token,
-             term_year: @term[:year],
-             term_name: @term[:term],
-             first_name: first_name,
-             last_name: last_name,
-             email: "",
-             building: building,
-             room_number: room,
-             complete: false)
+                    first_name: first_name,
+                    last_name: last_name,
+                    email: "",
+                    building: building,
+                    room_number: room,
+                    complete: false,
+                    term: Term.current_term)
 end
 
 Given /^the RCR with token "(.*?)" is marked complete$/ do |token|
@@ -118,7 +117,7 @@ Then /^the "(.*?)" parameter should be the same as the one I saved$/ do |param|
 end
 
 Then /^there is no RCR with the token "(.*?)"$/ do |token|
-  assert_equal(false, RCR.token_exists_for_term?(token, @term[:year], @term[:term]))
+  Term.current_term.rcrs.find_by(token: token).should be_nil
 end
 
 Then /^I should see the "(.*?)" parameter on the page(?: within "([^\"]*)")?$/ do |param, selector|

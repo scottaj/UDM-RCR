@@ -11,9 +11,9 @@ module NavigationHelpers
     case page_name
 
     when /the home\s?page/i
-      '/'
+      '/login'
     when /the confirmation page/i
-      '/confirm'
+      '/login/confirm'
     when /the RCR page/
       '/RCR'
     when /the confirmation help page/i

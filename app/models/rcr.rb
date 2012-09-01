@@ -13,8 +13,6 @@ end
 class RCR
   include Mongoid::Document
   field :token, type: String
-  field :term_year, type: Integer
-  field :term_name, type: String
   field :first_name, type: String
   field :last_name, type: String
   field :email, type: String
@@ -22,32 +20,35 @@ class RCR
   field :room_number, type: Integer
   field :complete, type: Boolean
   embeds_many :room_items
+  belongs_to :term, class_name: "Term"
 
-  def self.token_exists_for_term?(token, term_year, term_name)
-    return true if RCR.where(token: token, term_year: term_year, term_name: term_name).first
-    return false
-  end
+  alias :complete? :complete
 
-  def self.get_rcr_for_term_by_token(token, term_year, term_name)
-    return RCR.where(token: token, term_year: term_year, term_name: term_name).first
-  end
+  # def self.token_exists_for_term?(token, term_year, term_name)
+  #   return true if RCR.where(token: token, term_year: term_year, term_name: term_name).first
+  #   return false
+  # end
 
-  def update_or_create_room_item(room_item_params)
-    found = self.room_items.where(name: room_item_params[:name]).first
-    if found
-      found.update_attributes(room_item_params)
-      self.save
-    else
-      self.room_items.create(room_item_params)
-    end
-  end
+  # def self.get_rcr_for_term_by_token(token, term_year, term_name)
+  #   return RCR.where(token: token, term_year: term_year, term_name: term_name).first
+  # end
 
-  def get_rated_items()
-    return self.room_items.map {|item| item.name if (1..5).include?(item.rating)}
-  end
+  # def update_or_create_room_item(room_item_params)
+  #   found = self.room_items.where(name: room_item_params[:name]).first
+  #   if found
+  #     found.update_attributes(room_item_params)
+  #     self.save
+  #   else
+  #     self.room_items.create(room_item_params)
+  #   end
+  # end
 
-  def mark_complete()
-    self.update_attribute(:complete, true)
-    self.save
-  end
+  # def get_rated_items()
+  #   return self.room_items.map {|item| item.name if (1..5).include?(item.rating)}
+  # end
+
+  # def mark_complete()
+  #   self.update_attribute(:complete, true)
+  #   self.save
+  # end
 end
