@@ -54,6 +54,7 @@ Before do
                            building: "East Quad")
   eqd.map_rooms("101-112, 114, 116, 201-216")
   eqd.areas = [mcnichols, quads]
+  eqd.save
 end
 
 After do

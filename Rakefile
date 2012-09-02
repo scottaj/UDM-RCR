@@ -14,6 +14,7 @@ task :db_seed do
   Dir[File.dirname(__FILE__) + '/app/models/*.rb'].each {|file| require file }
 
   # Insert dummy config
+  Term.create(name: "Fall 2012", start_date: Date.today - 10, end_date: Date.today + 20)
   mcnichols = Area.create(name: "McNichols")
   mcnichols.items.create(category: "Furniture",
                          name: "Bed",
@@ -37,47 +38,45 @@ task :db_seed do
                            building: "East Quad")
   eqd.map_rooms("101-112, 114, 116, 201-216")
   eqd.areas = [mcnichols, quads]
+  eqd.save
   
   # insert dummy RCR's
   RCR.create(token: "abc123",
-             term_year: 2012,
-             term_name: "Summer",
              first_name: "Jane",
              last_name: "Doe",
              email: "jdoe@example.com",
              building: "East Quad",
              room_number: 210,
-             complete: false)
+             complete: false,
+             term: Term.active_term)
   
   RCR.create(token: "a1b2c3",
-             term_year: 2012,
-             term_name: "Summer",
              first_name: "Jack",
              last_name: "Johnson",
              email: "jj@example.com",
              building: "Holden",
              room_number: 311,
-             complete: false)
+             complete: false,
+             term: Term.active_term)
 
   RCR.create(token: "abc123",
-             term_year: 2013,
-             term_name: "Fall",
              first_name: "Diamond",
              last_name: "Dallas",
              email: "dd@example.com",
              building: "East Quad",
              room_number: 210,
-             complete: false)
+             complete: false,
+             term: Term.active_term)
 
   RCR.create(token: "321cba",
-             term_year: 2013,
              term_name: "Fall",
              first_name: "Jane",
              last_name: "Doe",
              email: "jdoe@example.com",
              building: "East Quad",
              room_number: 204,
-             complete: false)
+             complete: false,
+             term: Term.active_term)
 end
 
 desc "Clear out the current database"
@@ -90,6 +89,7 @@ task :db_clean do
   Area.destroy_all
   AreaMapping.destroy_all
   RCR.destroy_all
+  Term.destroy_all
 end
 
 task :db_seed => :db_clean
