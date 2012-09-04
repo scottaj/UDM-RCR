@@ -15,15 +15,13 @@ module NavigationHelpers
     when /the confirmation page/i
       '/login/confirm'
     when /the RCR page/
-      '/RCR'
+      '/rcr'
     when /the confirmation help page/i
       '/help/identity'
     when /the token help page/i
       '/help/token'
     when /the Submission confirmation page/i
-      '/submit'
-    when /the assignment not found page/i
-      '/notfound'
+      '/rcr/submit'
     when /the already complete page/i
       '/locked'
     else

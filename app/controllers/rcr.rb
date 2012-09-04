@@ -33,7 +33,6 @@ RcrApp.controllers :rcr do
     rcr = session_rcr
     save_ratings(params[:ratings], params[:category], rcr)
     categories = AreaMapping.get_category_names_for_room(rcr.building, rcr.room_number).to_a.sort
-    p params[:direction]
     return categories[categories.index(params[:category]) + params[:direction].to_i]
   end
 
@@ -53,12 +52,10 @@ RcrApp.controllers :rcr do
     }
 
     if items_left.empty?
-      p "here"
       rcr.complete = session[:submitted] = true
       rcr.save
       return "complete"
     else
-      p "there"
       content_type('application/json')
       return JSON::dump(items_left.map {|item| item.name})
     end

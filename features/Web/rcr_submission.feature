@@ -34,7 +34,7 @@ Feature: Users should be able to submit an RCR
     And I follow "Yes" within "#confirm"
     Then I should be able to rate each item
     And I should be able to add a comment for each rating
-    When I rate each item "5" within "#center"
+    When I rate each item "Good" within "#center"
     And I comment each item "Comment Here" within "#center"
     Then clicking "Next", "Previous", "Submit" within "#continue" should save my ratings to the database
 
@@ -68,13 +68,13 @@ Feature: Users should be able to submit an RCR
     And an RCR with token "abc123" exists for "Jane Doe" in room "210" of the building "East Quad"
     When I log in with the token "abc123"
     And I follow "Yes" within "#confirm"
-    And I rate each item "5" within "#center"
+    And I rate each item "Good" within "#center"
     And I comment each item "Comment Here" within "#center"
     And I press "Next"
     And I wait "3" seconds
     And I press "Next"
     And I wait "3" seconds
-    And I rate each item "5" within "#center"
+    And I rate each item "Good" within "#center"
     And I comment each item "Comment Here" within "#center" 
     And I submit the RCR
     And I wait "3" seconds
@@ -82,22 +82,13 @@ Feature: Users should be able to submit an RCR
     And the RCR with token "abc123" should be marked as incomplete
     When I press "Previous"
     And I wait "3" seconds
-    And I rate each item "5" within "#center"
+    And I rate each item "Good" within "#center"
     And I comment each item "Comment Here" within "#center"
     And I press "Next"
     And I submit the RCR
     And I wait "3" seconds
     Then I should be on the Submission confirmation page
     And the RCR with token "abc123" should be marked as complete
-    
-    
-  Scenario: Trying to submit an RCR for a room with no assignment should go to an error page
-    Given I am on the home page
-    And an RCR with token "9x8y7z" exists for "Pablo Escobar" in room "3257" of the building "Columbia"
-    When I log in with the token "9x8y7z"
-    Then I should be on the confirmation page
-    And I follow "Yes" within "#confirm"
-    Then I should be on the Assignment not found page
     
   Scenario: Submitting an RCR should lock it from further editing.
     Given I am on the home page

@@ -13,7 +13,7 @@ module AppCukeHelpers
   end
 
   def get_items_on_page(category_name)
-    return @room_info.get_items_for_room("East Quad", 210).keep_if do |item|
+    return AreaMapping.get_items_for_room("East Quad", 210).keep_if do |item|
       item[:category] == category_name
     end
   end
@@ -46,7 +46,8 @@ end
 
 Given /^the RCR with token "(.*?)" is marked complete$/ do |token|
   rcr = RCR.where(token: @rcr.token).first
-  rcr.mark_complete
+  rcr.complete = true
+  rcr.save
 end
 
 When /^I log in with the token "(.*?)"$/ do |token|
@@ -103,14 +104,14 @@ Then /^the "(.*?)" parameter should be saved$/ do |param|
 end
 
 Then /^the "(.*?)" parameter should be different than the one I saved$/ do |param|
-  sleep(2) # Sleep so that the page has time to change from the
+  sleep(5) # Sleep so that the page has time to change from the
   # previous step
   value = get_param_value(param, current_url)
   assert(@parameter_value != value, "#{value} is still #{@parameter_value}")
 end
 
 Then /^the "(.*?)" parameter should be the same as the one I saved$/ do |param|
-  sleep(2) # sleep so that the page has time to change from the
+  sleep(5) # sleep so that the page has time to change from the
   # previous step
   value = get_param_value(param, current_url)
   assert_equal(@parameter_value, value, "#{value} is not #{@parameter_value}")
@@ -139,7 +140,7 @@ end
 
 Then /^I should not see items that are not in the "(.*?)" parameter within "(.*?)"$/ do |param, selector|
   param_value = get_param_value(param, current_url)
-  bad_items = @room_info.get_items_for_room("East Quad", 210).delete_if do |item|
+  bad_items = AreaMapping.get_items_for_room("East Quad", 210).delete_if do |item|
     item[:category] == param_value
   end
    with_scope(selector) do
@@ -166,7 +167,7 @@ Then /^clicking (".+") within "(.*?)" should save my ratings to the database$/ d
       page.click_button(found)
     end
     sleep(3) # wait for ajax request to update rcr.
-    rcr = RCR.where(token: @rcr.token, term_year: @rcr.term_year, term_name: @rcr.term_name).first  
+    rcr = Term.current_term.rcrs.find_by(token: @rcr.token)  
     items_on_page.each {|item| assert(rcr.room_items.where(name: item[:name]).first, "Item \"#{item[:name]}\" not saved.")}
   else
     raise "Button not found!"
