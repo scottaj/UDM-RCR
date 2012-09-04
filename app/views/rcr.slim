@@ -33,7 +33,7 @@ div class="span2" id="left"
     ul
       - categories.each do |category|
         li
-          a href="/RCR?category=#{category}" = category
+          a href="/rcr?category=#{category}" = category
 
 coffee:
   $ ->
@@ -49,16 +49,16 @@ coffee:
 
     $("#previous").click( () ->
       $.post("/previouscategory", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
-        window.location.href = "/RCR?category=#{data}"
+        window.location.href = "/rcr?category=#{data}"
       ))
     $("#next").click( () ->
       $.post("/nextcategory", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
-        window.location.href = "/RCR?category=#{data}"
+        window.location.href = "/rcr?category=#{data}"
       ))
     $("#submit").click( () ->
       $.post("/submit", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
         if data == "complete"
-          window.location.href = "/submit"
+          window.location.href = "/rcr/submit"
         else
           data = data.join("\n")  
           alert("RCR not complete!\nIncomplete Items:\n#{data}")
