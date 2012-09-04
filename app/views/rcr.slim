@@ -48,15 +48,15 @@ coffee:
       return ratings
 
     $("#previous").click( () ->
-      $.post("/previouscategory", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
+      $.post("/rcr/category", {ratings: getRatings(), category: $(".hrow-category").text(), direction: -1}, (data) ->
         window.location.href = "/rcr?category=#{data}"
       ))
     $("#next").click( () ->
-      $.post("/nextcategory", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
+      $.post("/rcr/category", {ratings: getRatings(), category: $(".hrow-category").text(), direction: 1}, (data) ->
         window.location.href = "/rcr?category=#{data}"
       ))
     $("#submit").click( () ->
-      $.post("/submit", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
+      $.post("/rcr/submit", {ratings: getRatings(), category: $(".hrow-category").text()}, (data) ->
         if data == "complete"
           window.location.href = "/rcr/submit"
         else
