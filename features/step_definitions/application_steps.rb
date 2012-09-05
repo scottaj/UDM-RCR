@@ -86,35 +86,32 @@ When /^I submit the RCR$/ do
 end
 
 Then /^the RCR with token "(.*?)" should be marked as complete$/ do |token|
-  assert(RCR.where(token: token).first.complete)
+  RCR.find_by(token: token).complete?.should be_true
 end
 
 Then /^the RCR with token "(.*?)" should be marked as incomplete$/ do |token|
-  assert_equal(false, RCR.where(token: token).first.complete)  
+  RCR.find_by(token: token).complete?.should be_false
 end
 
 Then /^the "(.*?)" parameter should be "(.*?)"$/ do |param, value|
-  param_value = get_param_value(param, current_url)
-  assert_equal(param_value, value)
+  get_param_value(param, current_url).should == value
 end
 
 Then /^the "(.*?)" parameter should be saved$/ do |param|
   @parameter_value = get_param_value(param, current_url)
-  assert(@parameter_value)
+  @parameter_value.should be_true
 end
 
 Then /^the "(.*?)" parameter should be different than the one I saved$/ do |param|
   sleep(5) # Sleep so that the page has time to change from the
   # previous step
-  value = get_param_value(param, current_url)
-  assert(@parameter_value != value, "#{value} is still #{@parameter_value}")
+  get_param_value(param, current_url).should_not == @parameter_value
 end
 
 Then /^the "(.*?)" parameter should be the same as the one I saved$/ do |param|
   sleep(5) # sleep so that the page has time to change from the
   # previous step
-  value = get_param_value(param, current_url)
-  assert_equal(@parameter_value, value, "#{value} is not #{@parameter_value}")
+  get_param_value(param, current_url).should == @parameter_value
 end
 
 Then /^there is no RCR with the token "(.*?)"$/ do |token|
@@ -124,7 +121,7 @@ end
 Then /^I should see the "(.*?)" parameter on the page(?: within "([^\"]*)")?$/ do |param, selector|
   param_value = get_param_value(param, current_url)
   with_scope(selector) do
-    assert(page.has_content?(param_value)) if param_value
+    page.should have_content(param_value) if param_value
   end
 end
 
@@ -133,7 +130,7 @@ Then /^I should see the each item in the "(.*?)" parameter on the page(?: within
   items = get_items_on_page(param_value)
   with_scope(selector) do
     items.each do |item|
-      assert(page.has_content?(item[:name]))
+      page.should have_content(item[:name])
     end
   end
 end
@@ -145,18 +142,18 @@ Then /^I should not see items that are not in the "(.*?)" parameter(?: within "(
   end
    with_scope(selector) do
     bad_items.each do |item|
-      assert_equal(false, page.has_content?(item[:name]))
+      page.should_not have_content(item[:name])
     end
   end
 end
 
 
 Then /^I should be able to rate each item$/ do
-  assert(page.find('.item').has_selector?('select'))
+  page.find('.item').should have_selector('select')
 end
 
 Then /^I should be able to add a comment for each rating$/ do
-  assert(page.find('.item').has_selector?('textarea'))
+  page.find('.item').should have_selector('textarea')
 end
 
 Then /^clicking (".+")(?: within "([^\"]*)")? should save my ratings to the database$/ do |labels, selector|
@@ -168,7 +165,7 @@ Then /^clicking (".+")(?: within "([^\"]*)")? should save my ratings to the data
     end
     sleep(3) # wait for ajax request to update rcr.
     rcr = Term.current_term.rcrs.find_by(token: @rcr.token)  
-    items_on_page.each {|item| assert(rcr.room_items.where(name: item[:name]).first, "Item \"#{item[:name]}\" not saved.")}
+    items_on_page.each {|item| rcr.room_items.find_by(name: item[:name]).should be_true}
   else
     raise "Button not found!"
   end  
