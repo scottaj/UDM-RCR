@@ -138,7 +138,7 @@ Then /^I should see the each item in the "(.*?)" parameter on the page(?: within
   end
 end
 
-Then /^I should not see items that are not in the "(.*?)" parameter within "(.*?)"$/ do |param, selector|
+Then /^I should not see items that are not in the "(.*?)" parameter(?: within "([^\"]*)")?$/ do |param, selector|
   param_value = get_param_value(param, current_url)
   bad_items = AreaMapping.get_items_for_room("East Quad", 210).delete_if do |item|
     item[:category] == param_value
@@ -159,7 +159,7 @@ Then /^I should be able to add a comment for each rating$/ do
   assert(page.find('.item').has_selector?('textarea'))
 end
 
-Then /^clicking (".+") within "(.*?)" should save my ratings to the database$/ do |labels, selector|
+Then /^clicking (".+")(?: within "([^\"]*)")? should save my ratings to the database$/ do |labels, selector|
   found = find_which_button(labels, selector)
   if found
     items_on_page = get_items_on_page(get_param_value("category", current_url))

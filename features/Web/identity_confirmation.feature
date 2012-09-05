@@ -6,7 +6,7 @@ Feature: Identity confirmation
 		   And an RCR with token "abc123" exists for "Jane Doe" in room "210" of the building "East Quad"
 		   When I log in with the token "abc123"
 		   Then I should be on the confirmation page
-		   When I follow "Yes" within "#confirm"
+		   When I follow "Yes"
 		   Then I should be on the RCR page
 		   And I should see "Jane Doe"
 		   And I should see "East Quad 210"
@@ -16,5 +16,5 @@ Feature: Identity confirmation
 		   And an RCR with token "abc123" exists for "Jane Doe" in room "210" of the building "East Quad"
 		   When I log in with the token "abc123"
 		   Then I should be on the confirmation page
-		   When I follow "No" within "#confirm"
+		   When I follow "No"
 		   Then I should be on the confirmation help page
