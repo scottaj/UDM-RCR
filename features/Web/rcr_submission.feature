@@ -98,4 +98,19 @@ Feature: Users should be able to submit an RCR
     Then I should be on the home page
     And I should see "RCR Already Completed!"
 
+  @javascript  
   Scenario: I should be able to leave a page and return to it having the same state
+    Given I am on the home page
+    And an RCR with token "abc123" exists for "Jane Doe" in room "210" of the building "East Quad"
+    When I log in with the token "abc123"
+    And I follow "Yes"
+    Then each item should be unrated
+    And each item should be uncommented
+    When I rate each item "Good"
+    And I comment each item "Comment Here"
+    And I press "Next"
+    And I wait "3" seconds
+    And I press "Previous"
+    And I wait "3" seconds
+    Then each item should be rated "3"
+    And each item should have the comment "Comment Here"

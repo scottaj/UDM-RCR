@@ -173,3 +173,35 @@ Then /^clicking (".+") within "(.*?)" should save my ratings to the database$/ d
     raise "Button not found!"
   end  
 end
+
+Then /^each item should be unrated$/ do
+  param_value = get_param_value("category", current_url)
+  items = get_items_on_page(param_value)
+  items.each do |item|
+    find_field("#{item[:name]}-rating").value.should == "0"
+  end
+end
+
+Then /^each item should be uncommented$/ do
+  param_value = get_param_value("category", current_url)
+  items = get_items_on_page(param_value)
+  items.each do |item|
+    find_field("#{item[:name]}-comment").value.length.should == 0
+  end
+end
+
+Then /^each item should be rated "(.*?)"$/ do |rating|
+  param_value = get_param_value("category", current_url)
+  items = get_items_on_page(param_value)
+  items.each do |item|
+    find_field("#{item[:name]}-rating").value.should =~ /#{rating}/i
+  end
+end
+
+Then /^each item should have the comment "(.*?)"$/ do |comment|
+  param_value = get_param_value("category", current_url)
+  items = get_items_on_page(param_value)
+  items.each do |item|
+    find_field("#{item[:name]}-comment").value.should =~ /#{comment}/i
+  end
+end

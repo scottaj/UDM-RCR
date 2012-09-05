@@ -17,7 +17,7 @@ RcrApp.controllers :rcr do
                 else
                   "middle"
                 end
-    items = AreaMapping.get_items_for_room(rcr.building, rcr.room_number).keep_if {|item| item.category == params[:category]}
+    items = get_items_for_page(rcr, params[:category])
 
     render :rcr, locals: {
       page_title: "RCR Submission",

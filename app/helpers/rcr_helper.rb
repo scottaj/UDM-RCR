@@ -15,4 +15,18 @@ RcrApp.helpers do
     end
     rcr.save
   end
+
+  def get_items_for_page(rcr, category)
+    all_items = AreaMapping.get_items_for_room(rcr.building, rcr.room_number).keep_if {|item| item.category == category}
+    
+    return all_items.map do |item|
+      map = {name: item.name, category: item.category}
+      rated_item = rcr.room_items.find_by(category: item.category, name: item.name)
+      if rated_item
+        map[:rating] = rated_item.rating
+        map[:comments] = rated_item.comments
+      end
+      map
+    end
+  end
 end
