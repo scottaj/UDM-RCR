@@ -1,7 +1,7 @@
 RcrApp.controllers :login do
 
   get :index do
-    render :index, locals: {page_title: "Sign In", message: nil}
+    render 'login/login', locals: {page_title: "Sign In", message: nil}
   end
 
   post :index do
@@ -11,7 +11,7 @@ RcrApp.controllers :login do
       redirect '/login/confirm'
     else
       message = rcr.nil? ? "Token not found!" : "RCR Already Completed!"
-      render :index, locals: {page_title: "Sign In", message: message}
+      render 'login/login', locals: {page_title: "Sign In", message: message}
     end
   end
 
@@ -20,6 +20,6 @@ RcrApp.controllers :login do
     name = "#{rcr.first_name} #{rcr.last_name}"
     room = "#{rcr.building} #{rcr.room_number}"
     term = "#{rcr.term.name}"
-    render :confirm, locals: {page_title: "Confirmation", name: name, room: room, term: term}
+    render 'login/confirm', locals: {page_title: "Confirmation", name: name, room: room, term: term}
   end
 end

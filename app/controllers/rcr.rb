@@ -19,7 +19,7 @@ RcrApp.controllers :rcr do
                 end
     items = get_items_for_page(rcr, params[:category])
 
-    render :rcr, locals: {
+    render 'rcr/rcr', locals: {
       page_title: "RCR Submission",
       name: name,
       room: room,
@@ -38,7 +38,7 @@ RcrApp.controllers :rcr do
 
   get :submit do
     if session[:submitted]
-      slim :rcr_complete, locals: {page_title: "RCR Complete"}
+      slim 'rcr/rcr_complete', locals: {page_title: "RCR Complete"}
     else
       error(404)
     end
