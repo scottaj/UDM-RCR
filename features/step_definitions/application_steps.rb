@@ -85,6 +85,19 @@ When /^I submit the RCR$/ do
   page.click_button("Submit")
 end
 
+When /^I flag the first item on the page as needing attention$/ do
+  param_value = get_param_value("category", current_url)
+  items = get_items_on_page(param_value)
+end
+
+Then /^"([0-9]+?)" items? should be flagged as needing attention$/ do |n|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^the first item on the page should be flagged as needing attention$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
 Then /^the RCR with token "(.*?)" should be marked as complete$/ do |token|
   RCR.find_by(token: token).complete?.should be_true
 end

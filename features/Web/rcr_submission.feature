@@ -38,6 +38,17 @@ Feature: Users should be able to submit an RCR
     And I comment each item "Comment Here"  
     Then clicking "Next", "Previous", "Submit" should save my ratings to the database  
 
+  @javascript
+  Scenario: I should be able to flag any item as needing immeadiate attention.
+    Given I am on the home page
+    And an RCR with token "abc123" exists for "Jane Doe" in room "210" of the building "East Quad"
+    When I log in with the token "abc123"
+    And I follow "Yes"
+    And I flag the first item on the page as needing attention
+    And I press "Next"
+    And I wait "3" seconds
+    Then "1" item should be flagged as needing attention
+    
   Scenario: I should be able to jump to any category by clicking its link in the categories box
     Given I am on the home page
     And an RCR with token "abc123" exists for "Jane Doe" in room "210" of the building "East Quad"
@@ -106,11 +117,14 @@ Feature: Users should be able to submit an RCR
     And I follow "Yes"
     Then each item should be unrated
     And each item should be uncommented
+    And "0" items should be flagged as needing attention
     When I rate each item "Good"
     And I comment each item "Comment Here"
+    And I flag the first item on the page as needing attention
     And I press "Next"
     And I wait "3" seconds
     And I press "Previous"
     And I wait "3" seconds
     Then each item should be rated "3"
     And each item should have the comment "Comment Here"
+    And the first item on the page should be flagged as needing attention
